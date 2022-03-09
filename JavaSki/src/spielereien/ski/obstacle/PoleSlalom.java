@@ -24,7 +24,7 @@ public abstract class PoleSlalom extends Collideable {
 	public void fail() {
 		alreadyPassed = true;
 		sprite = Sprite.slalomFail;
-		failPartner();
+		// failPartner();
 	}
 
 	private void failPartner() {
@@ -35,7 +35,7 @@ public abstract class PoleSlalom extends Collideable {
 	public void success() {
 		alreadyPassed = true;
 		sprite = Sprite.slalomSuccess;
-		successPartner();
+		// successPartner();
 	}
 
 	private void successPartner() {

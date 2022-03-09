@@ -101,10 +101,10 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		spawnObstacles();
 		clearLocation(4000, 250, 6000, 750);
-		spawnStation();
+		spawnLift();
 		spawnSlalom();
-		
-		//spawnDebugging();
+
+		// spawnDebugging();
 
 		Collections.sort(collideables);
 		drawables.addAll(collideables);
@@ -290,18 +290,18 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		collideables.removeAll(collideablesToRemove);
 	}
 
-	private void spawnStation() {
+	private void spawnLift() {
 		// to see if the sprites work
 		new LiftMast(5000, 1500);
-		new GondolaUp(5022, 1600);
-		new GondolaDown(4978, 1700);
+		new GondolaUp(5028, 1600);
+		new GondolaDown(4970, 1700);
 		new Station(5000, 2000);
 	}
-	
+
 	private void spawnDebugging() {
-		
-		new DeepSnow(5100,1200);
-		new Rock(5100,1220);
+
+		new DeepSnow(5100, 1200);
+		new Rock(5100, 1220);
 	}
 
 	private void spawnSlalom() {
@@ -316,9 +316,9 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		for (int y = 1000; y < 7500; y += 250) {
 			if (y % 500 == 0) {
-				PoleSlalomRight.spawnSlalomPair(x, y, row);
+				new PoleSlalomRight(x, y);
 			} else {
-				PoleSlalomLeft.spawnSlalomPair(x, y, row);
+				new PoleSlalomLeft(x, y);
 			}
 		}
 	}
@@ -401,17 +401,23 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			player.drawMe(g);
 		}
 
-		// drawDebug(g);
+		for (Drawable d : drawables) {
+			if (d instanceof LiftMast) {
+				((LiftMast) d).drawCables(g);
+			}
+		}
+
+		drawDebug(g);
 	}
 
 	public void drawDebug(Graphics g) {
 		g.setColor(Color.BLACK);
 
-		g.drawString("objects in collideables: " + collideables.size(), 5, 20);
-		g.drawString("Player x: " + (int) player.x + " y: " + (int) player.y, 5, 30);
+		g.drawString("objects in collideables: " + collideables.size(), 10, 45);
+		g.drawString("Player x: " + (int) player.x + " y: " + (int) player.y, 10, 60);
 
-		g.drawString("drawtime: " + (System.currentTimeMillis() - drawtime), 5, 40);
-		g.drawString("collisiontime: " + (collisiontime - prevCollisiontime), 5, 50);
+		g.drawString("drawtime: " + (System.currentTimeMillis() - drawtime), 10, 75);
+		g.drawString("collisiontime: " + (collisiontime - prevCollisiontime), 10, 90);
 	}
 
 	private class KeyAction extends AbstractAction implements ActionListener {

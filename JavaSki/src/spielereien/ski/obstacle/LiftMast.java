@@ -24,16 +24,12 @@ public class LiftMast extends Collideable {
 		return mask;
 	}
 
-	@Override
-	public void drawMe(Graphics g) {
-
+	public void drawCables(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.drawLine(getDrawX() + sprite.getWidth() / 2 - 22, getDrawY() - 500, getDrawX() + sprite.getWidth() / 2 - 22,
+		g.drawLine(getDrawX() + sprite.getWidth() / 2 - 29, getDrawY() - 500, getDrawX() + sprite.getWidth() / 2 - 29,
 				getDrawY() + 500);
-		g.drawLine(getDrawX() + sprite.getWidth() / 2 + 22, getDrawY() - 500, getDrawX() + sprite.getWidth() / 2 + 22,
+		g.drawLine(getDrawX() + sprite.getWidth() / 2 + 29, getDrawY() - 500, getDrawX() + sprite.getWidth() / 2 + 29,
 				getDrawY() + 500);
-
-		super.drawMe(g);
 	}
 
 }
