@@ -2,15 +2,19 @@ package spielereien.ski.obstacle;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import spielereien.ski.sprites.Sprite;
 
 public abstract class Gondola extends Collideable {
 
+	public static ArrayList<Gondola> allGondolas = new ArrayList<Gondola>();
+
 	Gondola(int x, int y, BufferedImage sprite) {
 		super(x, y, sprite);
 
-		this.maskZ = 124;
+		allGondolas.add(this);
+
 	}
 
 	@Override
@@ -28,6 +32,14 @@ public abstract class Gondola extends Collideable {
 
 		g.setColor(Sprite.SHADOW);
 		g.fillOval(getDrawX() + sprite.getWidth() / 2 - 10, getDrawY() + sprite.getHeight(), 20, 8);
+	}
+
+	public void step() {
+		if (this instanceof GondolaUp) {
+			y -= 1;
+		} else {
+			y += 1;
+		}
 	}
 
 }

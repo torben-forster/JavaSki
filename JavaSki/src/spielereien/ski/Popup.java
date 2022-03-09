@@ -4,7 +4,7 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class Popup implements Drawable {
+public class Popup extends Drawable {
 
 	static ArrayList<Popup> allPopups = new ArrayList<Popup>();
 
@@ -60,6 +60,12 @@ public class Popup implements Drawable {
 
 	public int getDrawY() {
 		return (int) (SkiPanel.player.getDrawY() - 30 + timer);
+	}
+
+	@Override
+	public int compareTo(Drawable drawable) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

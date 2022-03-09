@@ -14,7 +14,7 @@ import spielereien.ski.obstacle.PoleSlalomLeft;
 import spielereien.ski.obstacle.Solid;
 import spielereien.ski.sprites.Sprite;
 
-public class Player implements Drawable {
+public class Player extends Drawable {
 	public double x;
 	public double y;
 	double z;

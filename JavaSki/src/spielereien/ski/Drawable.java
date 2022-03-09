@@ -2,14 +2,22 @@ package spielereien.ski;
 
 import java.awt.Graphics;
 
-public interface Drawable {
+import spielereien.ski.obstacle.Collideable;
 
-	public void drawMe(Graphics g);
+public abstract class Drawable implements Comparable<Drawable> {
 
-	public double getDrawHeight();
+	public abstract void drawMe(Graphics g);
 
-	public int getDrawX();
+	public abstract double getDrawHeight();
 
-	public int getDrawY();
+	public abstract int getDrawX();
+
+	public abstract int getDrawY();
+
+	@Override
+	public int compareTo(Drawable drawable) {
+
+		return (int) Math.signum((this.getDrawHeight() - drawable.getDrawHeight()));
+	}
 
 }

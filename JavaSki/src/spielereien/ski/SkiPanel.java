@@ -22,6 +22,7 @@ import javax.swing.Timer;
 import spielereien.ski.obstacle.Collideable;
 import spielereien.ski.obstacle.Bush;
 import spielereien.ski.obstacle.DeepSnow;
+import spielereien.ski.obstacle.Gondola;
 import spielereien.ski.obstacle.GondolaDown;
 import spielereien.ski.obstacle.GondolaUp;
 import spielereien.ski.obstacle.LargeHill;
@@ -60,7 +61,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	Map<String, String> heldKeys = new HashMap<String, String>();
 	Map<String, String> pressedKeys = new HashMap<String, String>();
 
-	List<Drawable> drawables = new LinkedList<Drawable>();
+	static List<Drawable> drawables = new LinkedList<Drawable>();
 
 	public static List<Collideable> collideables = new LinkedList<Collideable>();
 	// List<Collideable> collideablesToRemove = new LinkedList<Collideable>();
@@ -106,8 +107,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		// spawnDebugging();
 
-		Collections.sort(collideables);
 		drawables.addAll(collideables);
+		Collections.sort(drawables);
 
 		paused = false;
 		// sortDrawables();
@@ -259,6 +260,10 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		player.step();
 		player.wrap();
+		
+		for(Gondola g:Gondola.allGondolas) {
+			g.step();
+		}
 
 		prevCollisiontime = System.currentTimeMillis();
 		player.handleCollisions(collideables);
@@ -291,11 +296,17 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	}
 
 	private void spawnLift() {
-		// to see if the sprites work
-		new LiftMast(5000, 1500);
-		new GondolaUp(5028, 1600);
-		new GondolaDown(4970, 1700);
-		new Station(5000, 2000);
+
+		int x = 6000;
+		int xGondolaUp = x + 28;
+		int xGondolaDown = x - 30;
+
+		for (int y = 0; y < 20000; y += 1000) {
+			new LiftMast(x, y);
+			new GondolaUp(xGondolaUp, y);
+			new GondolaDown(xGondolaDown, y);
+		}
+		//new Station(5000, 2000);
 	}
 
 	private void spawnDebugging() {
@@ -385,6 +396,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		super.paintComponent(g);
 
 		// g.drawString("sorttime: " + (sortEnd - sortStart), 5, 60);
+		
+		Collections.sort(drawables);
 
 		drawtime = System.currentTimeMillis();
 		boolean playerDrawn = false;
@@ -407,7 +420,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			}
 		}
 
-		drawDebug(g);
+		// drawDebug(g);
 	}
 
 	public void drawDebug(Graphics g) {

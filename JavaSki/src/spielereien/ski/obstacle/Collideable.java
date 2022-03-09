@@ -8,7 +8,7 @@ import spielereien.ski.SkiPanel;
 import spielereien.ski.sprites.Sprite;
 import spielereien.ski.Drawable;
 
-public class Collideable implements Drawable, Comparable<Collideable> {
+public class Collideable extends Drawable {
 	/*
 	 * TODO- types I can think of: tree, stump, ramp, stone, small snow-hill, large
 	 * snow-hill, bush, deep snow, lift, snowboarder, beginner, dog
@@ -108,11 +108,7 @@ public class Collideable implements Drawable, Comparable<Collideable> {
 		return y + sprite.getHeight() - spriteOriginY;
 	}
 
-	@Override
-	public int compareTo(Collideable coll) {
-
-		return (int) Math.signum((this.getDrawHeight() - coll.getDrawHeight()));
-	}
+	
 
 	public int getMaskX(int height) {
 
