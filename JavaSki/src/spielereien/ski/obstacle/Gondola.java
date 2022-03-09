@@ -40,6 +40,14 @@ public abstract class Gondola extends Collideable {
 		} else {
 			y += 1;
 		}
+
+		// gondola <-> station wrapping hardcoded values
+		if (y < -560) {
+			y = 15440;
+		}
+		if (y > 15440) {
+			y = -560;
+		}
 	}
 
 }

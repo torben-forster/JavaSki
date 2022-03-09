@@ -101,7 +101,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		player.updateDimension(windowDimension);
 
 		spawnObstacles();
-		clearLocation(4000, 250, 6000, 750);
+		clearArea(4000, 250, 6000, 750);
+
 		spawnLift();
 		spawnSlalom();
 
@@ -111,7 +112,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		Collections.sort(drawables);
 
 		paused = false;
-		// sortDrawables();
 
 		/*
 		 * start the timer all the way at the end otherwise some multhithreading or some
@@ -260,8 +260,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		player.step();
 		player.wrap();
-		
-		for(Gondola g:Gondola.allGondolas) {
+
+		for (Gondola g : Gondola.allGondolas) {
 			g.step();
 		}
 
@@ -285,7 +285,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	 * @param x2 int, x-coordinate of lower-right corner
 	 * @param y2 int, y-coordinate of lower-right corner
 	 */
-	private void clearLocation(int x, int y, int x2, int y2) {
+	private void clearArea(int x, int y, int x2, int y2) {
 		ArrayList<Collideable> collideablesToRemove = new ArrayList<Collideable>();
 		for (Collideable c : collideables) {
 			if (c.x >= x && c.x <= x2 && c.y >= y && c.y <= y2) {
@@ -297,22 +297,27 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 	private void spawnLift() {
 
+		clearArea(5900, -500, 6100, 15000);
+
 		int x = 6000;
 		int xGondolaUp = x + 28;
 		int xGondolaDown = x - 30;
 
-		for (int y = 0; y < 20000; y += 1000) {
+		for (int y = 0; y <= 15000; y += 1000) {
 			new LiftMast(x, y);
+			new GondolaUp(xGondolaUp, y+500);
 			new GondolaUp(xGondolaUp, y);
+			
+			new GondolaDown(xGondolaDown, y+500);
 			new GondolaDown(xGondolaDown, y);
 		}
-		//new Station(5000, 2000);
+		new Station(x, -560);
+		new Station(x, 15440);
 	}
 
 	private void spawnDebugging() {
 
-		new DeepSnow(5100, 1200);
-		new Rock(5100, 1220);
+		new Station(5100, 1200);
 	}
 
 	private void spawnSlalom() {
@@ -396,7 +401,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		super.paintComponent(g);
 
 		// g.drawString("sorttime: " + (sortEnd - sortStart), 5, 60);
-		
+
 		Collections.sort(drawables);
 
 		drawtime = System.currentTimeMillis();

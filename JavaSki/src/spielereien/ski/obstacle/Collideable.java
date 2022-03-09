@@ -92,12 +92,12 @@ public class Collideable extends Drawable {
 		 * strictly necessary, i don't even know if it's beneficial after all
 		 */
 
-		int offset = 80;
+		int offset = 100;
 		int width = (int) dimension.getWidth();
 		int height = (int) dimension.getHeight();
 
 		if (x < 0 - offset || x > width + offset || y < 0 - offset || y > height + offset) {
-			return true;// temp
+			return true;
 		} else {
 			return true;
 		}
@@ -107,8 +107,6 @@ public class Collideable extends Drawable {
 	public double getDrawHeight() {
 		return y + sprite.getHeight() - spriteOriginY;
 	}
-
-	
 
 	public int getMaskX(int height) {
 
