@@ -9,9 +9,12 @@ import java.awt.image.BufferedImage;
 
 import spielereien.ski.obstacle.Collideable;
 import spielereien.ski.obstacle.DeepSnow;
+import spielereien.ski.obstacle.GondolaUp;
 import spielereien.ski.obstacle.PoleSlalom;
 import spielereien.ski.obstacle.PoleSlalomLeft;
 import spielereien.ski.obstacle.Solid;
+import spielereien.ski.obstacle.StationLower;
+import spielereien.ski.obstacle.StationUpper;
 import spielereien.ski.sprites.Sprite;
 
 public class Player extends Drawable {
@@ -30,6 +33,7 @@ public class Player extends Drawable {
 	final static int SITTING = 2;
 	final static int SLOW = 3;
 	final static int GONDOLA = 4;
+	final static int WAITING = 5;
 
 	final static int FRONTFLIP = 10;
 	final static int BACKFLIP = -10;
@@ -50,9 +54,13 @@ public class Player extends Drawable {
 	int airHeading;
 	double speed;
 
+	double holdingG;
+
+	GondolaUp myGondola;
+
 	BufferedImage currentSprite;
 
-	int state; // eg. standing, crashed, etc
+	public int state; // eg. standing, crashed, etc
 
 	public Player(int x, int y) {
 
@@ -75,6 +83,8 @@ public class Player extends Drawable {
 		this.knockoutTimer = -1;
 		this.currentScoreTimer = -1;
 
+		this.holdingG = 0;
+
 		this.totalScore = 0;
 		this.currentScore = 0;
 
@@ -85,6 +95,27 @@ public class Player extends Drawable {
 	public void step() {
 
 		handleTimers();
+
+		if (state == GONDOLA) {
+			speed = 0;
+			x = myGondola.x + 8;
+			y = myGondola.y - 1;
+			z = 80;
+
+			if (y < StationUpper.upperY + 21) {
+				leaveGondola();
+			}
+
+			return;
+		}
+
+		if (state == WAITING) {
+			GondolaUp currentClosest = findClosestGondolaUp();
+			if (currentClosest.readyForPlayer) {
+				enterGondola(currentClosest);
+			}
+			return;
+		}
 
 		if (state == SKIING && onGround()) {
 
@@ -131,7 +162,7 @@ public class Player extends Drawable {
 			climbingTimer = 0;
 		}
 		if (climbingTimer > 0) {
-			speedY = -1.5;
+			speedY = -1.5 * turbo;
 		}
 
 		x += speedX;
@@ -194,6 +225,10 @@ public class Player extends Drawable {
 	}
 
 	public void handleCollisions(List<Collideable> collideables) {
+		if (state == WAITING) {
+			return;
+		}
+
 		for (Collideable c : collideables) {
 
 			double dX = Math.abs(x - c.x);
@@ -236,11 +271,10 @@ public class Player extends Drawable {
 			x += Math.signum(x - coll.x);
 			y += Math.signum(y - coll.y);
 		}
-
 	}
 
 	private void accident() {
-		if (graceTimer > 0 || state == DOWN) {
+		if (graceTimer > 0 || state == DOWN || state == GONDOLA) {
 			return;
 		}
 		currentScore = currentScore / 2;
@@ -353,7 +387,7 @@ public class Player extends Drawable {
 			if (state == SKIING) {
 
 				if (heading == -4) {
-					speed += 0.5;
+					speed += 0.5 * turbo;
 				} else if (heading > -4) {
 					heading--;
 				}
@@ -383,7 +417,7 @@ public class Player extends Drawable {
 			if (state == SKIING) {
 
 				if (heading == 4) {
-					speed += 0.5;
+					speed += 0.5 * turbo;
 				} else if (heading < 4) {
 					heading++;
 				}
@@ -403,7 +437,7 @@ public class Player extends Drawable {
 	}
 
 	public void inputSpace() {
-		if (inputBlocked()) {
+		if (inputBlocked() && state != GONDOLA) {
 			return;
 		}
 
@@ -413,7 +447,24 @@ public class Player extends Drawable {
 		} else if (onGround()) {
 			state = SKIING;
 			jump();
+		} else if (state == GONDOLA) {
+			state = SKIING;
+			jump();
+			airHeading = 1;
 		}
+	}
+
+	public void inputG() {
+		if (inputBlocked() && state != GONDOLA) {
+			return;
+		}
+
+		if (state == GONDOLA) {
+			holdingG += 0.05;
+		} else if (euclideanDistance(x, y, StationLower.lowerX, StationLower.lowerY) < 100) {
+			state = WAITING;
+		}
+
 	}
 
 	/**
@@ -435,7 +486,8 @@ public class Player extends Drawable {
 	/**
 	 * jumping over an obstacle (i.e. ramp), can generate COMBO points
 	 * 
-	 * @param mult double, multiplier
+	 * @param mult double, multiplier for upwards speed, usually determined by the
+	 *             obstacle
 	 */
 	private void kickedJump(double mult) {
 		heading = 0;
@@ -475,6 +527,50 @@ public class Player extends Drawable {
 
 	}
 
+	public void enterGondolaDebug() {
+		enterGondola(findClosestGondolaUp());
+	}
+
+	public void enterGondola(GondolaUp gondola) {
+		myGondola = gondola;
+		state = GONDOLA;
+		currentScoreTimer = 0;
+	}
+
+	public void leaveGondola() {
+		myGondola = null;
+		state = SITTING;
+
+		x = StationUpper.upperX + Sprite.liftStationUpper.getWidth() / 2 + Sprite.liftBuilding.getWidth() - 24;
+		y = StationUpper.upperY + Sprite.liftStationUpper.getHeight() / 2 - 24;
+		z = 0;
+		speed = 0;
+	}
+
+	private GondolaUp findClosestGondolaUp() {
+		GondolaUp currentClosest = null;
+		for (GondolaUp gondola : GondolaUp.everyGondolaUp) {
+
+			if (currentClosest == null) {
+				currentClosest = gondola;
+				continue;
+			}
+
+			if (euclideanDistance(x, y, gondola.x, gondola.y) < euclideanDistance(x, y, currentClosest.x,
+					currentClosest.y)) {
+				currentClosest = gondola;
+			}
+
+		}
+		return currentClosest;
+	}
+
+	private double euclideanDistance(double x1, double y1, double x2, double y2) {
+		double dX = x1 - x2;
+		double dY = y1 - y2;
+		return (Math.sqrt(dX * dX + dY * dY));
+	}
+
 	private boolean onGround() {
 		if (z == 0) {
 			return true;
@@ -484,7 +580,7 @@ public class Player extends Drawable {
 	}
 
 	private boolean inputBlocked() {
-		if (knockoutTimer > 0 || state == SLOW) {
+		if (knockoutTimer > 0 || state == SLOW || state == GONDOLA || state == WAITING) {
 			return true;
 		} else {
 			return false;
@@ -508,6 +604,8 @@ public class Player extends Drawable {
 
 		g.setColor(Color.BLACK);
 
+		drawSkipPrompt(g, drawX, drawY);
+
 		g.drawString("Score: " + Integer.toString(totalScore), 10, 15);
 		g.drawString("Speed: " + Integer.toString((int) speed), 10, 30);
 
@@ -522,14 +620,20 @@ public class Player extends Drawable {
 		 */
 	}
 
-	public void drawShadow(Graphics g, int drawX, int drawY) {
+	private void drawSkipPrompt(Graphics g, int drawX, int drawY) {
+		if (state == GONDOLA) {
+			g.drawString("hold 'G' to skip to the top", drawX - 96, drawY + 10);
+		}
+	}
+
+	private void drawShadow(Graphics g, int drawX, int drawY) {
 		if (!onGround()) {
 			g.setColor(Sprite.SHADOW);
 			g.fillOval(drawX - 10, (int) (drawY + z - 3), 20, 6);
 		}
 	}
 
-	public void drawPlayerSprite(Graphics g, int drawX, int drawY) {
+	private void drawPlayerSprite(Graphics g, int drawX, int drawY) {
 		switch (state) {
 		case SLOW:
 			if (heading == 0) {
@@ -550,6 +654,7 @@ public class Player extends Drawable {
 				currentSprite = Sprite.playerAirDown;
 			}
 			break;
+		case WAITING:
 		case SITTING:
 			currentSprite = Sprite.playerSitting;
 			break;
@@ -561,7 +666,7 @@ public class Player extends Drawable {
 		Sprite.drawPlayerSprite(g, drawX, drawY, currentSprite);
 	}
 
-	public void drawCurrentScore(Graphics g, int drawX, int drawY) {
+	private void drawCurrentScore(Graphics g, int drawX, int drawY) {
 		if (currentScore != 0) {
 			String score;
 
@@ -578,7 +683,7 @@ public class Player extends Drawable {
 
 	@Override
 	public double getDrawHeight() {
-		return y + 0.1;
+		return y - 5 + 0.1;
 	}
 
 	@Override

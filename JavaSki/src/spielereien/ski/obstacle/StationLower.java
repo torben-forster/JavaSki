@@ -7,12 +7,14 @@ import spielereien.ski.sprites.Sprite;
 
 public class StationLower extends Station {
 
-	public static int yLower;
+	public static int lowerX;
+	public static int lowerY;
 
 	public StationLower(int x, int y) {
 		super(x, y, Sprite.liftStationLower);
 
-		yLower = y;
+		lowerX = x;
+		lowerY = y;
 	}
 
 	@Override

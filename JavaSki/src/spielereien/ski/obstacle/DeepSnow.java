@@ -17,7 +17,7 @@ public class DeepSnow extends Collideable {
 
 	@Override
 	public double getDrawHeight() {
-		return -1;
+		return y - 100;
 	}
 
 }

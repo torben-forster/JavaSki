@@ -103,7 +103,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		player.updateDimension(windowDimension);
 
 		spawnObstacles();
-		clearArea(4000, 250, 6000, 750);
 
 		spawnLift();
 		spawnSlalom();
@@ -113,6 +112,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		Collections.sort(drawables);
 
 		paused = false;
+		reset();
 
 		/*
 		 * start the timer all the way at the end otherwise some multhithreading or some
@@ -193,6 +193,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 				} else {
 					player.turbo = 1;
 				}
+			} else if (keyPressed.equals("G")) {
+				player.inputG();
 			}
 		}
 		if (keyPressed.equals("P")) {
@@ -201,8 +203,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	}
 
 	private void reset() {
-		player.x = 5000;
-		player.y = 500;
+		player.x = StationUpper.upperX + Sprite.liftStationUpper.getWidth() / 2 + Sprite.liftBuilding.getWidth() - 24;
+		player.y = StationUpper.upperY + Sprite.liftStationUpper.getHeight() / 2 - 24;
 		player.z = 0;
 		player.speed = 0;
 		player.heading = 0;
@@ -223,6 +225,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		addKeyMap("F");
 		addKeyMap("P");
+		addKeyMap("G");
 
 		addKeyMap("ENTER");
 		addKeyMap("DELETE");
@@ -262,7 +265,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		player.step();
 		player.wrap();
 
-		for (Gondola g : Gondola.allGondolas) {
+		for (Gondola g : Gondola.everyGondola) {
 			g.step();
 		}
 
@@ -299,9 +302,9 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 	private void spawnLift() {
 
-		clearArea(5900, -500, 6100, 15000);
+		clearArea(4900, -700, 5100, 15600);
 
-		int x = 6000;
+		int x = 5000;
 		int xGondolaUp = x + 28;
 		int xGondolaDown = x - 30;
 
@@ -322,16 +325,14 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	}
 
 	private void spawnSlalom() {
-		int row = 5000;
-
-		// player starts at x=5000, y = 500
+		// player starts at x = 5000, y = -600
 
 		int x = 4250;
+		int y = 0;
 
-		new SignSlalom(x + 250, 350);
-		new SignSlalom(x + 250 + row, 350);
+		new SignSlalom(x, y - 200);
 
-		for (int y = 1000; y < 7500; y += 250) {
+		for (; y < 7500; y += 250) {
 			if (y % 500 == 0) {
 				new PoleSlalomRight(x, y);
 			} else {
@@ -350,7 +351,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		int row = 5000;
 
 		for (int x = 0; x < row; x += 10) {
-			for (int y = -1000; y < 15000; y += 10) {
+			for (int y = -1000; y < 16000; y += 10) {
 
 				if (Math.random() < 0.00125) {
 
@@ -406,18 +407,10 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		Collections.sort(drawables);
 
 		drawtime = System.currentTimeMillis();
-		boolean playerDrawn = false;
-		for (Drawable d : drawables) {
 
-			if (!playerDrawn && d.getDrawHeight() > player.getDrawHeight()) {
-				player.drawMe(g);
-				playerDrawn = true;
-			}
+		for (Drawable d : drawables) {
 			d.drawMe(g);
 
-		}
-		if (!playerDrawn) {
-			player.drawMe(g);
 		}
 
 		for (Drawable d : drawables) {

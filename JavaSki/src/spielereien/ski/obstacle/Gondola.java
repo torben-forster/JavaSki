@@ -8,13 +8,16 @@ import spielereien.ski.sprites.Sprite;
 
 public abstract class Gondola extends Collideable {
 
-	public static ArrayList<Gondola> allGondolas = new ArrayList<Gondola>();
+	public boolean readyForPlayer;
+
+	public static ArrayList<Gondola> everyGondola = new ArrayList<Gondola>();
 
 	Gondola(int x, int y, BufferedImage sprite) {
 		super(x, y, sprite);
 
-		allGondolas.add(this);
+		readyForPlayer = false;
 
+		everyGondola.add(this);
 	}
 
 	@Override
@@ -35,6 +38,8 @@ public abstract class Gondola extends Collideable {
 	}
 
 	public void step() {
+		readyForPlayer = false;
+
 		if (this instanceof GondolaUp) {
 			y -= 2;
 		} else {
@@ -42,11 +47,12 @@ public abstract class Gondola extends Collideable {
 		}
 
 		// gondola <-> station wrapping
-		if (y < StationUpper.yUpper + 20) {
-			y = StationLower.yLower + 20;
+		if (y < StationUpper.upperY + 20) {
+			y = StationLower.lowerY + 20;
+			readyForPlayer = true;
 		}
-		if (y > StationLower.yLower + 20) {
-			y = StationUpper.yUpper + 20;
+		if (y > StationLower.lowerY + 20) {
+			y = StationUpper.upperY + 20;
 		}
 	}
 
