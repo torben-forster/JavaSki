@@ -460,12 +460,14 @@ public class Player extends Drawable {
 	}
 
 	public void inputG() {
-		if (inputBlocked() && state != GONDOLA) {
+		if (inputBlocked() && state != GONDOLA && state != WAITING) {
 			return;
 		}
 
 		if (state == GONDOLA) {
 			skipTimer += 5;
+		} else if (state == WAITING) {
+			state = SITTING;
 		} else if (euclideanDistance(x, y, StationLower.lowerX, StationLower.lowerY) < 100) {
 			state = WAITING;
 		}

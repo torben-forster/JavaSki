@@ -7,8 +7,15 @@ import spielereien.ski.sprites.Sprite;
 
 public class LiftMast extends Collideable {
 
-	public LiftMast(int x, int y) {
+	int nr;
+
+	public LiftMast(int x, int y, int nr) {
 		super(x, y, Sprite.liftMast);
+		this.nr = nr;
+	}
+
+	public LiftMast(int x, int y) {
+		this(x, y, -1);
 
 	}
 
@@ -22,6 +29,16 @@ public class LiftMast extends Collideable {
 		}
 
 		return mask;
+	}
+
+	@Override
+	public void drawMe(Graphics g) {
+		super.drawMe(g);
+		if (nr != -1) {
+			g.setColor(Color.WHITE);
+			String nummer = Integer.toString(nr);
+			g.drawString(nummer, getDrawX() + sprite.getWidth() / 2 - 3 * nummer.length(), getDrawY() + 90);
+		}
 	}
 
 	public void drawCables(Graphics g) {

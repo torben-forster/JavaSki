@@ -311,8 +311,10 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		int xGondolaUp = x + 28;
 		int xGondolaDown = x - 30;
 
+		int mastZaehler = 15;
 		for (int y = 0; y <= 15000; y += 1000) {
-			new LiftMast(x, y);
+
+			new LiftMast(x, y, mastZaehler--);
 			new GondolaUp(xGondolaUp, y + 500);
 			new GondolaUp(xGondolaUp, y);
 
