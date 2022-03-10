@@ -461,6 +461,7 @@ public class Player extends Drawable {
 
 		if (state == GONDOLA) {
 			holdingG += 0.05;
+			// TODO make this actually end up invoking leaveGondola()
 		} else if (euclideanDistance(x, y, StationLower.lowerX, StationLower.lowerY) < 100) {
 			state = WAITING;
 		}
