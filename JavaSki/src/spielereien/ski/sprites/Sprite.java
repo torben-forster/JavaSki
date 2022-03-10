@@ -43,7 +43,9 @@ public class Sprite {
 	public static BufferedImage signSlalom;
 
 	public static BufferedImage liftBuilding;
-	public static BufferedImage liftStation;
+	public static BufferedImage liftStationLower;
+	public static BufferedImage liftStationUpper;
+	public static BufferedImage liftStationShadow;
 
 	public static void bufferImages() {
 
@@ -80,7 +82,9 @@ public class Sprite {
 			signSlalom = ImageIO.read(new File(path + "signSlalom.png"));
 
 			liftBuilding = ImageIO.read(new File(path + "liftBuilding.png"));
-			liftStation = ImageIO.read(new File(path + "liftStation.png"));
+			liftStationLower = ImageIO.read(new File(path + "liftStationLower.png"));
+			liftStationUpper = ImageIO.read(new File(path + "liftStationUpper.png"));
+			liftStationShadow = ImageIO.read(new File(path + "liftStationShadow.png"));
 
 			liftMast = ImageIO.read(new File(path + "liftMast.png"));
 			liftGondolaUp = ImageIO.read(new File(path + "liftGondolaUp.png"));

@@ -29,6 +29,7 @@ public class Player extends Drawable {
 	final static int DOWN = 1;
 	final static int SITTING = 2;
 	final static int SLOW = 3;
+	final static int GONDOLA = 4;
 
 	final static int FRONTFLIP = 10;
 	final static int BACKFLIP = -10;
@@ -276,11 +277,7 @@ public class Player extends Drawable {
 					climbingTimer = 6;
 				}
 
-				if (heading < 0 && heading > -4) {
-					heading--;
-				} else if (heading > 0 && heading < 4) {
-					heading++;
-				}
+				turnUpwards();
 			} else if (state == SITTING) {
 				state = SKIING;
 				if (heading >= 0) {
@@ -301,6 +298,14 @@ public class Player extends Drawable {
 			if (airHeading < BACKFLIP) {
 				airHeading = FRONTFLIP;
 			}
+		}
+	}
+
+	private void turnUpwards() {
+		if (heading < 0 && heading > -4) {
+			heading--;
+		} else if (heading > 0 && heading < 4) {
+			heading++;
 		}
 	}
 
@@ -331,7 +336,7 @@ public class Player extends Drawable {
 		}
 	}
 
-	public void turnDownwards() {
+	private void turnDownwards() {
 		if (heading < 0) {
 			heading++;
 		} else if (heading > 0) {
@@ -547,6 +552,9 @@ public class Player extends Drawable {
 			break;
 		case SITTING:
 			currentSprite = Sprite.playerSitting;
+			break;
+		case GONDOLA:
+			currentSprite = Sprite.playerAir.get(2);
 			break;
 		}
 

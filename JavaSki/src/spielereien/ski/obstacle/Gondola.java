@@ -36,17 +36,17 @@ public abstract class Gondola extends Collideable {
 
 	public void step() {
 		if (this instanceof GondolaUp) {
-			y -= 1;
+			y -= 2;
 		} else {
-			y += 1;
+			y += 2;
 		}
 
-		// gondola <-> station wrapping hardcoded values
-		if (y < -560) {
-			y = 15440;
+		// gondola <-> station wrapping
+		if (y < StationUpper.yUpper + 20) {
+			y = StationLower.yLower + 20;
 		}
-		if (y > 15440) {
-			y = -560;
+		if (y > StationLower.yLower + 20) {
+			y = StationUpper.yUpper + 20;
 		}
 	}
 

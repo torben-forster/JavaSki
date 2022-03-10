@@ -34,6 +34,8 @@ public class Collideable extends Drawable {
 	public double jumpMult; // jump Multiplier if jumped
 
 	public Collideable(int x, int y, BufferedImage sprite) {
+		super();
+		
 		this.x = x;
 		this.y = y;
 

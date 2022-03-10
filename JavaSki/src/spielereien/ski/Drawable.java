@@ -5,6 +5,10 @@ import java.awt.Graphics;
 import spielereien.ski.obstacle.Collideable;
 
 public abstract class Drawable implements Comparable<Drawable> {
+	
+	public Drawable() {
+		SkiPanel.drawables.add(this);
+	}
 
 	public abstract void drawMe(Graphics g);
 

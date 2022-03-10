@@ -35,6 +35,8 @@ import spielereien.ski.obstacle.PoleSlalomLeft;
 import spielereien.ski.obstacle.PoleSlalomRight;
 import spielereien.ski.obstacle.SmallHill;
 import spielereien.ski.obstacle.Station;
+import spielereien.ski.obstacle.StationLower;
+import spielereien.ski.obstacle.StationUpper;
 import spielereien.ski.obstacle.Stump;
 import spielereien.ski.obstacle.Tree;
 import spielereien.ski.sprites.Sprite;
@@ -108,7 +110,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		// spawnDebugging();
 
-		drawables.addAll(collideables);
 		Collections.sort(drawables);
 
 		paused = false;
@@ -184,8 +185,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 				reset();
 
 			} else if (keyPressed.equals("ENTER")) {
-				player.x = 0;
-				player.y = 0;
+				player.x = 5300;
+				player.y = -600;
 			} else if (keyPressed.equals("F")) {
 				if (player.turbo < 2) {
 					player.turbo = 3;
@@ -293,6 +294,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			}
 		}
 		collideables.removeAll(collideablesToRemove);
+		drawables.removeAll(collideablesToRemove);
 	}
 
 	private void spawnLift() {
@@ -305,19 +307,18 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		for (int y = 0; y <= 15000; y += 1000) {
 			new LiftMast(x, y);
-			new GondolaUp(xGondolaUp, y+500);
+			new GondolaUp(xGondolaUp, y + 500);
 			new GondolaUp(xGondolaUp, y);
-			
-			new GondolaDown(xGondolaDown, y+500);
+
+			new GondolaDown(xGondolaDown, y + 500);
 			new GondolaDown(xGondolaDown, y);
 		}
-		new Station(x, -560);
-		new Station(x, 15440);
+		new StationUpper(x, -600);
+		new StationLower(x, 15500);
 	}
 
 	private void spawnDebugging() {
 
-		new Station(5100, 1200);
 	}
 
 	private void spawnSlalom() {
@@ -349,7 +350,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		int row = 5000;
 
 		for (int x = 0; x < row; x += 10) {
-			for (int y = 0; y < 15000; y += 10) {
+			for (int y = -1000; y < 15000; y += 10) {
 
 				if (Math.random() < 0.00125) {
 
