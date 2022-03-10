@@ -162,9 +162,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			} else if (keyHeld.equals("RIGHT")) {
 				player.inputRight();
 			}
-			if (keyHeld.equals("G")) {
-				player.inputG();
-			}
 		}
 	}
 
@@ -311,7 +308,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		int xGondolaUp = x + 28;
 		int xGondolaDown = x - 30;
 
-		int mastZaehler = 15;
+		int mastZaehler = 16;
 		for (int y = 0; y <= 15000; y += 1000) {
 
 			new LiftMast(x, y, mastZaehler--);

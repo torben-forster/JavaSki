@@ -100,7 +100,7 @@ public class Player extends Drawable {
 			y = myGondola.y - 1;
 			z = 80;
 
-			if (y < StationUpper.upperY + 21) {
+			if (y < StationUpper.upperY + 25) {
 				leaveGondola();
 			}
 

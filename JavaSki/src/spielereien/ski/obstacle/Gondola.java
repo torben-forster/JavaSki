@@ -41,9 +41,9 @@ public abstract class Gondola extends Collideable {
 		readyForPlayer = false;
 
 		if (this instanceof GondolaUp) {
-			y -= 2;
+			y -= 3;
 		} else {
-			y += 2;
+			y += 3;
 		}
 
 		// gondola <-> station wrapping
