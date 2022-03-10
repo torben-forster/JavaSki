@@ -39,7 +39,7 @@ public class Popup extends Drawable {
 
 		ArrayList<Popup> popupsToRemove = new ArrayList<Popup>();
 		for (Popup p : allPopups) {
-			if (p.timer == 0) {
+			if (p.timer < 0) {
 				popupsToRemove.add(p);
 			}
 			p.timer--;

@@ -49,12 +49,11 @@ public class Player extends Drawable {
 	int graceTimer;
 	int knockoutTimer;
 	int currentScoreTimer;
+	int skipTimer;
 
 	int heading; // 0 is down, negative is left, positive is right
 	int airHeading;
 	double speed;
-
-	double holdingG;
 
 	GondolaUp myGondola;
 
@@ -82,8 +81,7 @@ public class Player extends Drawable {
 		this.graceTimer = 5;
 		this.knockoutTimer = -1;
 		this.currentScoreTimer = -1;
-
-		this.holdingG = 0;
+		this.skipTimer = 0;
 
 		this.totalScore = 0;
 		this.currentScore = 0;
@@ -194,6 +192,13 @@ public class Player extends Drawable {
 		if (knockoutTimer == 0) {
 			graceTimer = 0;
 			state = SITTING;
+		}
+
+		if (skipTimer > 30) {
+			leaveGondola();
+		}
+		if (skipTimer > 0) {
+			skipTimer -= 1;
 		}
 
 		Popup.advanceAllTimers();
@@ -460,8 +465,7 @@ public class Player extends Drawable {
 		}
 
 		if (state == GONDOLA) {
-			holdingG += 0.05;
-			// TODO make this actually end up invoking leaveGondola()
+			skipTimer += 5;
 		} else if (euclideanDistance(x, y, StationLower.lowerX, StationLower.lowerY) < 100) {
 			state = WAITING;
 		}
@@ -623,7 +627,7 @@ public class Player extends Drawable {
 
 	private void drawSkipPrompt(Graphics g, int drawX, int drawY) {
 		if (state == GONDOLA) {
-			g.drawString("hold 'G' to skip to the top", drawX - 96, drawY + 10);
+			g.drawString("hold 'G' to skip to the top", drawX + 20, drawY - 10);
 		}
 	}
 

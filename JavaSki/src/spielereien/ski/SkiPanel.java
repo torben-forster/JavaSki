@@ -162,6 +162,9 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			} else if (keyHeld.equals("RIGHT")) {
 				player.inputRight();
 			}
+			if (keyHeld.equals("G")) {
+				player.inputG();
+			}
 		}
 	}
 
@@ -186,7 +189,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 			} else if (keyPressed.equals("ENTER")) {
 				player.x = 5300;
-				player.y = -600;
+				player.y = 15000;
 			} else if (keyPressed.equals("F")) {
 				if (player.turbo < 2) {
 					player.turbo = 3;
@@ -410,7 +413,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		for (Drawable d : drawables) {
 			d.drawMe(g);
-
 		}
 
 		for (Drawable d : drawables) {
@@ -430,6 +432,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		g.drawString("drawtime: " + (System.currentTimeMillis() - drawtime), 10, 75);
 		g.drawString("collisiontime: " + (collisiontime - prevCollisiontime), 10, 90);
+
+		g.drawString("Skiptimer: " + player.skipTimer, 10, 105);
 	}
 
 	private class KeyAction extends AbstractAction implements ActionListener {
