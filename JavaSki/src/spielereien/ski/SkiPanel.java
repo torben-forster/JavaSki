@@ -162,6 +162,9 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			} else if (keyHeld.equals("RIGHT")) {
 				player.inputRight();
 			}
+			if(keyHeld.equals("G")) {
+				player.inputHeldG();
+			}
 		}
 	}
 

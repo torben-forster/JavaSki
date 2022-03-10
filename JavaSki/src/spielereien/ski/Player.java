@@ -108,6 +108,7 @@ public class Player extends Drawable {
 		}
 
 		if (state == WAITING) {
+			speed = 0;
 			GondolaUp currentClosest = findClosestGondolaUp();
 			if (currentClosest.readyForPlayer) {
 				enterGondola(currentClosest);
@@ -460,18 +461,22 @@ public class Player extends Drawable {
 	}
 
 	public void inputG() {
-		if (inputBlocked() && state != GONDOLA && state != WAITING) {
+		if (inputBlocked() && state != WAITING) {
 			return;
 		}
 
-		if (state == GONDOLA) {
-			skipTimer += 5;
-		} else if (state == WAITING) {
+		if (state == WAITING) {
 			state = SITTING;
 		} else if (euclideanDistance(x, y, StationLower.lowerX, StationLower.lowerY) < 100) {
 			state = WAITING;
 		}
 
+	}
+
+	public void inputHeldG() {
+		if (state == GONDOLA) {
+			skipTimer += 5;
+		}
 	}
 
 	/**
