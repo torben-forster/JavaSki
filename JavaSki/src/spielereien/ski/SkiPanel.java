@@ -208,6 +208,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		player.heading = 0;
 		player.currentScoreTimer = 0;
 		player.state = 2;
+		
+		Drawable.updateDimension(windowDimension);
 
 		gameOver = false;
 	}
