@@ -338,6 +338,10 @@ public class Player extends Drawable {
 	}
 
 	public void handleScores() {
+		if (inSlalom) {
+			currentScore = 0;
+			currentScoreTimer = 0;
+		}
 
 		if (currentScoreTimer == 0) {
 			totalScore += currentScore;

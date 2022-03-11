@@ -1,7 +1,6 @@
 package spielereien.ski.obstacle;
 
 import java.awt.image.BufferedImage;
-import spielereien.ski.obstacle.LiftBuilding;
 
 public abstract class Station extends Solid {
 

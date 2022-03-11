@@ -48,8 +48,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	final static long SEED = System.currentTimeMillis();
-
 	boolean gameOver = false;
 
 	Timer timer;
@@ -101,13 +99,11 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		Collideable.updateDimension(windowDimension);
 
 		player = new Player(5000, 500);
-		
+
 		spawnObstacles();
 
 		spawnLift();
 		spawnSlalomCourse();
-
-		// spawnDebugging();
 
 		Collections.sort(drawables);
 
@@ -321,10 +317,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		}
 		new StationUpper(x, -600);
 		new StationLower(x, 15500);
-	}
-
-	private void spawnDebugging() {
-
 	}
 
 	private void spawnSlalomCourse() {

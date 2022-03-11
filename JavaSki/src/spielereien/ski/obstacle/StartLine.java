@@ -1,7 +1,5 @@
 package spielereien.ski.obstacle;
 
-import java.awt.Graphics;
-
 import spielereien.ski.sprites.Sprite;
 
 public class StartLine extends Collideable {

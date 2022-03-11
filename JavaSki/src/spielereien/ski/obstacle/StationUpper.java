@@ -2,9 +2,7 @@ package spielereien.ski.obstacle;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
-import spielereien.ski.Drawable;
 import spielereien.ski.sprites.Sprite;
 
 public class StationUpper extends Station {

@@ -3,8 +3,6 @@ package spielereien.ski;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import spielereien.ski.obstacle.Collideable;
-
 public abstract class Drawable implements Comparable<Drawable> {
 
 	public double x;

@@ -1,6 +1,5 @@
 package spielereien.ski.obstacle;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
