@@ -302,9 +302,8 @@ public class Player extends Drawable {
 		} else if (coll instanceof StartLine) {
 			inSlalom = true;
 			slalomTimer = 0;
-			for (PoleSlalom p : PoleSlalom.allSlalomSigns) {
-				p.reset();
-			}
+			
+			PoleSlalom.resetAll();
 
 		} else if (coll instanceof FinishLine) {
 			inSlalom = false;
@@ -556,7 +555,7 @@ public class Player extends Drawable {
 		airHeading = 0;
 
 		speed += 0.5;
-		speedZ = speed * mult * 1;
+		speedZ = speed * mult;
 
 		int comboScore = (int) (currentScore * 0.5);
 		if (comboScore != 0) {
@@ -597,6 +596,9 @@ public class Player extends Drawable {
 		myGondola = gondola;
 		state = GONDOLA;
 		currentScoreTimer = 0;
+		x = myGondola.x;
+		y = myGondola.y;
+		z = 80;
 	}
 
 	public void leaveGondola() {
@@ -731,8 +733,6 @@ public class Player extends Drawable {
 			}
 			break;
 		case WAITING:
-			currentSprite = Sprite.playerSkiing.get(-4);
-			break;
 		case SITTING:
 			currentSprite = Sprite.playerSitting;
 			break;

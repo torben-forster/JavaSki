@@ -8,6 +8,8 @@ public class Sign extends Collideable {
 
 	public Sign(int x, int y, BufferedImage sprite) {
 		super(x, y, sprite);
+
+		maskY = 2;
 	}
 
 	public static void newSignSlalom(int x, int y) {
@@ -21,7 +23,7 @@ public class Sign extends Collideable {
 	public static void newSignStartRight(int x, int y) {
 		new Sign(x, y, Sprite.signStartRight);
 	}
-	
+
 	public static void newSignFinishLeft(int x, int y) {
 		new Sign(x, y, Sprite.signFinishLeft);
 	}

@@ -182,7 +182,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 			if (keyPressed.equals("DELETE")) {
 				reset();
-
 			} else if (keyPressed.equals("ENTER")) {
 				player.x = 5300;
 				player.y = 15000;
@@ -331,8 +330,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		Sign.newSignSlalom(x, y - 450);
 
-		Sign.newSignStartLeft(x + 70, y - 250);
-		Sign.newSignStartRight(x - 70, y - 250);
+		Sign.newSignStartLeft(x + 75, y - 250);
+		Sign.newSignStartRight(x - 75, y - 250);
 		new StartLine(x, y - 249);
 
 		for (; y < 8000; y += 250) {
@@ -348,8 +347,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		}
 
-		Sign.newSignFinishLeft(x + 70, y);
-		Sign.newSignFinishRight(x - 70, y);
+		Sign.newSignFinishLeft(x + 75, y);
+		Sign.newSignFinishRight(x - 75, y);
 		new FinishLine(x, y + 1);
 	}
 

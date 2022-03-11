@@ -24,7 +24,13 @@ public abstract class PoleSlalom extends Collideable {
 
 		alreadyPassed = false;
 		allSlalomSigns.add(this);
-		maskY = -2;
+		maskY = 1;
+	}
+
+	public static void resetAll() {
+		for (PoleSlalom p : allSlalomSigns) {
+			p.reset();
+		}
 	}
 
 	public void reset() {
