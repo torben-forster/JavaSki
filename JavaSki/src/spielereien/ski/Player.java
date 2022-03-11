@@ -1,7 +1,6 @@
 package spielereien.ski;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.List;
 
@@ -9,10 +8,11 @@ import java.awt.image.BufferedImage;
 
 import spielereien.ski.obstacle.Collideable;
 import spielereien.ski.obstacle.DeepSnow;
+import spielereien.ski.obstacle.FinishLine;
 import spielereien.ski.obstacle.GondolaUp;
 import spielereien.ski.obstacle.PoleSlalom;
-import spielereien.ski.obstacle.PoleSlalomLeft;
 import spielereien.ski.obstacle.Solid;
+import spielereien.ski.obstacle.StartLine;
 import spielereien.ski.obstacle.StationLower;
 import spielereien.ski.obstacle.StationUpper;
 import spielereien.ski.sprites.Sprite;
@@ -38,9 +38,10 @@ public class Player extends Drawable {
 	final static int FRONTFLIP = 10;
 	final static int BACKFLIP = -10;
 
-	static final double GRAVITY = -0.5;
+	boolean inSlalom;
+	public double slalomTimer;
 
-	static Dimension dimension;
+	static final double GRAVITY = -0.5;
 
 	int totalScore;
 	int currentScore;
@@ -86,6 +87,9 @@ public class Player extends Drawable {
 		this.totalScore = 0;
 		this.currentScore = 0;
 
+		this.inSlalom = false;
+		this.slalomTimer = 0;
+
 		this.state = SITTING;
 		this.currentSprite = Sprite.playerSitting;
 	}
@@ -100,10 +104,9 @@ public class Player extends Drawable {
 			y = myGondola.y - 1;
 			z = 80;
 
-			if (y < StationUpper.upperY + 25) {
+			if (y < StationUpper.y + 25) {
 				leaveGondola();
 			}
-
 			return;
 		}
 
@@ -168,6 +171,23 @@ public class Player extends Drawable {
 		y += speedY;
 	}
 
+	private boolean atStation() {
+		if (state == GONDOLA) {
+			return false;
+		}
+		int stationX = StationLower.x - Sprite.liftStationLower.getWidth() / 2;
+		int stationY = StationLower.y;
+
+		if (x > stationX && x < stationX + 250) {
+
+			if (y > stationY && y < stationY + 150) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+
 	public void wrap() {
 		// create illusion of endless map
 		if (SkiPanel.player.x < 2000) {
@@ -202,27 +222,38 @@ public class Player extends Drawable {
 			skipTimer -= 1;
 		}
 
+		if (inSlalom) {
+			slalomTimer += 0.03;
+		}
+
 		Popup.advanceAllTimers();
 
 	}
 
 	public void handleSlalom(List<PoleSlalom> slalomSigns) {
+		if (!inSlalom) {
+			return;
+		}
 		for (PoleSlalom sign : slalomSigns) {
 			if (sign.alreadyPassed) {
 				continue;
 			}
-			if (Math.abs(x - sign.x) <= 500 && y - sign.y >= 0) {
-				if (sign instanceof PoleSlalomLeft) {
-					if (sign.x > x) {
+			if (y > sign.y) {
+				double dX = x - sign.x;
+
+				if (sign.facing == 'l') {
+					if (dX < 0 && dX > -PoleSlalom.SPACING) {
 						sign.success();
 					} else {
 						sign.fail();
+
 					}
 				} else {
-					if (sign.x < x) {
+					if (dX > 0 && dX < PoleSlalom.SPACING) {
 						sign.success();
 					} else {
 						sign.fail();
+
 					}
 
 				}
@@ -268,8 +299,22 @@ public class Player extends Drawable {
 			if (speedZ < 0) {
 				accident();
 			}
+		} else if (coll instanceof StartLine) {
+			inSlalom = true;
+			slalomTimer = 0;
+			for (PoleSlalom p : PoleSlalom.allSlalomSigns) {
+				p.reset();
+			}
+
+		} else if (coll instanceof FinishLine) {
+			inSlalom = false;
+
 		} else {
 			accident();
+		}
+
+		if (inSlalom && coll instanceof PoleSlalom) {
+			((PoleSlalom) coll).fail();
 		}
 
 		if (coll instanceof Solid) {
@@ -283,6 +328,7 @@ public class Player extends Drawable {
 		if (graceTimer > 0 || state == DOWN || state == GONDOLA) {
 			return;
 		}
+
 		currentScore = currentScore / 2;
 		currentScore -= 10;
 		currentScoreTimer = 20;
@@ -467,7 +513,7 @@ public class Player extends Drawable {
 
 		if (state == WAITING) {
 			state = SITTING;
-		} else if (euclideanDistance(x, y, StationLower.lowerX, StationLower.lowerY) < 100) {
+		} else if (atStation()) {
 			state = WAITING;
 		}
 
@@ -508,7 +554,7 @@ public class Player extends Drawable {
 		speed += 0.5;
 		speedZ = speed * mult * 1;
 
-		int comboScore = (int) (currentScore * 0.25);
+		int comboScore = (int) (currentScore * 0.5);
 		if (comboScore != 0) {
 			new Popup("COMBO +" + Integer.toString(comboScore), Sprite.DARK_GREEN);
 			currentScore += comboScore;
@@ -553,8 +599,8 @@ public class Player extends Drawable {
 		myGondola = null;
 		state = SITTING;
 
-		x = StationUpper.upperX + Sprite.liftStationUpper.getWidth() / 2 + Sprite.liftBuilding.getWidth() - 24;
-		y = StationUpper.upperY + Sprite.liftStationUpper.getHeight() / 2 - 24;
+		x = StationUpper.x + Sprite.liftStationUpper.getWidth() / 2 + Sprite.liftBuilding.getWidth() - 24;
+		y = StationUpper.y + Sprite.liftStationUpper.getHeight() / 2 - 24;
 		z = 0;
 		speed = 0;
 	}
@@ -599,14 +645,13 @@ public class Player extends Drawable {
 		}
 	}
 
-	public void updateDimension(Dimension dim) {
-		dimension = dim;
-	}
-
 	@Override
 	public void drawMe(Graphics g) {
 		int drawX = getDrawX();
 		int drawY = getDrawY();
+
+		g.setColor(Color.BLACK);
+		// g.drawString("x: " + x + " y: " + y, drawX, drawY);
 
 		drawShadow(g, drawX, drawY);
 
@@ -617,9 +662,14 @@ public class Player extends Drawable {
 		g.setColor(Color.BLACK);
 
 		drawSkipPrompt(g, drawX, drawY);
+		drawStationPrompt(g, drawX, drawY);
 
 		g.drawString("Score: " + Integer.toString(totalScore), 10, 15);
 		g.drawString("Speed: " + Integer.toString((int) speed), 10, 30);
+
+		if (slalomTimer > 0) {
+			g.drawString("Time: " + String.format("%1.2f s", slalomTimer), 10, 45);
+		}
 
 		if (state == DOWN) {
 			g.drawString("OUCH", drawX - 20, drawY - 15);
@@ -635,6 +685,16 @@ public class Player extends Drawable {
 	private void drawSkipPrompt(Graphics g, int drawX, int drawY) {
 		if (state == GONDOLA) {
 			g.drawString("hold 'G' to skip to the top", drawX + 20, drawY - 10);
+		}
+	}
+
+	private void drawStationPrompt(Graphics g, int drawX, int drawY) {
+		if (atStation()) {
+			if (state != WAITING) {
+				g.drawString("press 'G' to wait for the next chairlift", drawX + 20, drawY - 10);
+			} else {
+				g.drawString("press 'G' to stop waiting for the chairlift", drawX + 20, drawY - 10);
+			}
 		}
 	}
 
@@ -667,6 +727,8 @@ public class Player extends Drawable {
 			}
 			break;
 		case WAITING:
+			currentSprite = Sprite.playerSkiing.get(-4);
+			break;
 		case SITTING:
 			currentSprite = Sprite.playerSitting;
 			break;
@@ -689,7 +751,7 @@ public class Player extends Drawable {
 				g.setColor(Color.RED);
 				score = Integer.toString(currentScore);
 			}
-			g.drawString(score, drawX - 7 * (score.length() / 2), drawY - 35);
+			g.drawString(score, drawX - 3 * score.length(), drawY - 35);
 		}
 	}
 

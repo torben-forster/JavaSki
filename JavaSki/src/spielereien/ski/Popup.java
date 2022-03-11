@@ -18,7 +18,7 @@ public class Popup extends Drawable {
 		this.timer = 15;
 		this.color = color;
 
-		this.offsetX = 30;
+		this.offsetX = 5 + text.length()*3;
 
 		allPopups.add(this);
 	}
@@ -32,7 +32,7 @@ public class Popup extends Drawable {
 
 	@Override
 	public double getDrawHeight() {
-		return 0;
+		return SkiPanel.player.getDrawHeight();
 	}
 
 	public static void advanceAllTimers() {
@@ -46,6 +46,7 @@ public class Popup extends Drawable {
 
 		}
 		allPopups.removeAll(popupsToRemove);
+		SkiPanel.drawables.removeAll(popupsToRemove);
 	}
 
 	public static void drawAllPopups(Graphics g) {
@@ -60,12 +61,6 @@ public class Popup extends Drawable {
 
 	public int getDrawY() {
 		return (int) (SkiPanel.player.getDrawY() - 30 + timer);
-	}
-
-	@Override
-	public int compareTo(Drawable drawable) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

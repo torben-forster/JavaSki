@@ -9,16 +9,16 @@ import spielereien.ski.sprites.Sprite;
 
 public class StationUpper extends Station {
 
-	public static int upperX;
-	public static int upperY;
+	public static int x;
+	public static int y;
 
 	public StationUpper(int x, int y) {
 		super(x, y, Sprite.liftStationUpper);
 
 		new StationUpperShadow(x, y + sprite.getHeight() - spriteOriginY);
 
-		upperX = x;
-		upperY = y;
+		StationUpper.x = x;
+		StationUpper.y = y;
 	}
 
 	@Override

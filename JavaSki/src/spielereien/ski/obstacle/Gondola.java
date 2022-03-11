@@ -47,12 +47,12 @@ public abstract class Gondola extends Collideable {
 		}
 
 		// gondola <-> station wrapping
-		if (y < StationUpper.upperY + 20) {
-			y = StationLower.lowerY + 20;
+		if (y < StationUpper.y + 20) {
+			y = StationLower.y + 20;
 			readyForPlayer = true;
 		}
-		if (y > StationLower.lowerY + 20) {
-			y = StationUpper.upperY + 20;
+		if (y > StationLower.y + 20) {
+			y = StationUpper.y + 20;
 		}
 	}
 

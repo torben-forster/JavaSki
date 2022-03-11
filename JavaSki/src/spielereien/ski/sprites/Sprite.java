@@ -16,6 +16,8 @@ public class Sprite {
 	public final static Color BROWN = new Color(185, 122, 87);
 	public final static Color SHADOW = new Color(0, 0, 0, 50);
 
+	public static BufferedImage noSprite;
+
 	public static Map<Integer, BufferedImage> playerSkiing = new HashMap<Integer, BufferedImage>();
 	public static Map<Integer, BufferedImage> playerAir = new HashMap<Integer, BufferedImage>();
 	public static BufferedImage playerDown;
@@ -31,8 +33,10 @@ public class Sprite {
 	public static BufferedImage stump;
 	public static BufferedImage deepSnow;
 
-	public static BufferedImage slalomLeft;
-	public static BufferedImage slalomRight;
+	public static BufferedImage slalomRedLeft;
+	public static BufferedImage slalomRedRight;
+	public static BufferedImage slalomBlueLeft;
+	public static BufferedImage slalomBlueRight;
 	public static BufferedImage slalomSuccess;
 	public static BufferedImage slalomFail;
 
@@ -41,6 +45,12 @@ public class Sprite {
 	public static BufferedImage liftGondolaDown;
 
 	public static BufferedImage signSlalom;
+	public static BufferedImage signStartLeft;
+	public static BufferedImage signStartRight;
+	public static BufferedImage signFinishLeft;
+	public static BufferedImage signFinishRight;
+
+	public static BufferedImage line;
 
 	public static BufferedImage liftBuilding;
 	public static BufferedImage liftStationLower;
@@ -51,6 +61,9 @@ public class Sprite {
 
 		try {
 			String path = "src/spielereien/ski/sprites/";
+
+			noSprite = ImageIO.read(new File(path + "noSprite.png"));
+
 			for (int i = -4; i <= 4; i++) {
 				playerSkiing.put(i, ImageIO.read(new File(path + "skiing" + i + ".png")));
 			}
@@ -74,12 +87,20 @@ public class Sprite {
 			stump = ImageIO.read(new File(path + "stump.png"));
 			deepSnow = ImageIO.read(new File(path + "deepSnow.png"));
 
-			slalomLeft = ImageIO.read(new File(path + "slalomLeft.png"));
-			slalomRight = ImageIO.read(new File(path + "slalomRight.png"));
+			slalomRedLeft = ImageIO.read(new File(path + "slalomRedLeft.png"));
+			slalomRedRight = ImageIO.read(new File(path + "slalomRedRight.png"));
+			slalomBlueLeft = ImageIO.read(new File(path + "slalomBlueLeft.png"));
+			slalomBlueRight = ImageIO.read(new File(path + "slalomBlueRight.png"));
 			slalomSuccess = ImageIO.read(new File(path + "slalomSuccess.png"));
 			slalomFail = ImageIO.read(new File(path + "slalomFail.png"));
 
 			signSlalom = ImageIO.read(new File(path + "signSlalom.png"));
+			signStartLeft = ImageIO.read(new File(path + "signSlalomStartLeft.png"));
+			signStartRight = ImageIO.read(new File(path + "signSlalomStartRight.png"));
+			signFinishLeft = ImageIO.read(new File(path + "signSlalomFinishLeft.png"));
+			signFinishRight = ImageIO.read(new File(path + "signSlalomFinishRight.png"));
+
+			line = ImageIO.read(new File(path + "line.png"));
 
 			liftBuilding = ImageIO.read(new File(path + "liftBuilding.png"));
 			liftStationLower = ImageIO.read(new File(path + "liftStationLower.png"));
@@ -92,8 +113,8 @@ public class Sprite {
 
 			System.out.println("images loaded");
 		} catch (IOException e) {
-
-			System.out.println(e);
+			System.out.println("image loading exception");
+			System.out.println(e.getMessage());
 		}
 
 	}

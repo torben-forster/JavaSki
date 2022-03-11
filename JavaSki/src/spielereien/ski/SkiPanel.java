@@ -22,6 +22,7 @@ import javax.swing.Timer;
 import spielereien.ski.obstacle.Collideable;
 import spielereien.ski.obstacle.Bush;
 import spielereien.ski.obstacle.DeepSnow;
+import spielereien.ski.obstacle.FinishLine;
 import spielereien.ski.obstacle.Gondola;
 import spielereien.ski.obstacle.GondolaDown;
 import spielereien.ski.obstacle.GondolaUp;
@@ -29,12 +30,12 @@ import spielereien.ski.obstacle.LargeHill;
 import spielereien.ski.obstacle.LiftMast;
 import spielereien.ski.obstacle.Ramp;
 import spielereien.ski.obstacle.Rock;
-import spielereien.ski.obstacle.SignSlalom;
+import spielereien.ski.obstacle.Sign;
 import spielereien.ski.obstacle.PoleSlalom;
-import spielereien.ski.obstacle.PoleSlalomLeft;
-import spielereien.ski.obstacle.PoleSlalomRight;
+import spielereien.ski.obstacle.PoleSlalomRed;
+import spielereien.ski.obstacle.PoleSlalomBlue;
 import spielereien.ski.obstacle.SmallHill;
-import spielereien.ski.obstacle.Station;
+import spielereien.ski.obstacle.StartLine;
 import spielereien.ski.obstacle.StationLower;
 import spielereien.ski.obstacle.StationUpper;
 import spielereien.ski.obstacle.Stump;
@@ -100,12 +101,11 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		Collideable.updateDimension(windowDimension);
 
 		player = new Player(5000, 500);
-		player.updateDimension(windowDimension);
-
+		
 		spawnObstacles();
 
 		spawnLift();
-		spawnSlalom();
+		spawnSlalomCourse();
 
 		// spawnDebugging();
 
@@ -162,7 +162,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			} else if (keyHeld.equals("RIGHT")) {
 				player.inputRight();
 			}
-			if(keyHeld.equals("G")) {
+			if (keyHeld.equals("G")) {
 				player.inputHeldG();
 			}
 		}
@@ -206,8 +206,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	}
 
 	private void reset() {
-		player.x = StationUpper.upperX + Sprite.liftStationUpper.getWidth() / 2 + Sprite.liftBuilding.getWidth() - 24;
-		player.y = StationUpper.upperY + Sprite.liftStationUpper.getHeight() / 2 - 24;
+		player.x = StationUpper.x + Sprite.liftStationUpper.getWidth() / 2 + Sprite.liftBuilding.getWidth() - 24;
+		player.y = StationUpper.y + Sprite.liftStationUpper.getHeight() / 2 - 24;
 		player.z = 0;
 		player.speed = 0;
 		player.heading = 0;
@@ -260,9 +260,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		if (windowDimension.getWidth() != previousDim.getWidth()
 				|| windowDimension.getHeight() != previousDim.getHeight()) {
-			player.updateDimension(windowDimension);
-			Collideable.updateDimension(windowDimension);
-
+			Drawable.updateDimension(windowDimension);
 		}
 
 		player.step();
@@ -329,21 +327,38 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 	}
 
-	private void spawnSlalom() {
+	private void spawnSlalomCourse() {
 		// player starts at x = 5000, y = -600
 
-		int x = 4250;
-		int y = 0;
+		int x = 4300;
+		int y = 250;
 
-		new SignSlalom(x, y - 200);
+		int rangeX = 175;
 
-		for (; y < 7500; y += 250) {
+		clearArea(x - 200, y - 500, x + 200, y - 200);
+
+		Sign.newSignSlalom(x, y - 450);
+
+		Sign.newSignStartLeft(x + 70, y - 250);
+		Sign.newSignStartRight(x - 70, y - 250);
+		new StartLine(x, y - 249);
+
+		for (; y < 8000; y += 250) {
+
+			int spawnX = (int) (x + Math.random() * rangeX * 2 - rangeX);
+			clearArea(spawnX - 100, y - 100, spawnX + 100, y + 100);
+
 			if (y % 500 == 0) {
-				new PoleSlalomRight(x, y);
+				PoleSlalomBlue.spawnSlalomPair(spawnX, y);
 			} else {
-				new PoleSlalomLeft(x, y);
+				PoleSlalomRed.spawnSlalomPair(spawnX, y);
 			}
+
 		}
+
+		Sign.newSignFinishLeft(x + 70, y);
+		Sign.newSignFinishRight(x - 70, y);
+		new FinishLine(x, y + 1);
 	}
 
 	private void spawnObstacles() {
@@ -385,7 +400,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 						new DeepSnow((int) (x), (int) (y));
 						new DeepSnow((int) (x + row), (int) (y));
 
-					} else if (rnd < 0.925) {
+					} else if (rnd < 0.95) {
 						new SmallHill((int) (x), (int) (y));
 						new SmallHill((int) (x + row), (int) (y));
 					}

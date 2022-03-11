@@ -7,14 +7,14 @@ import spielereien.ski.sprites.Sprite;
 
 public class StationLower extends Station {
 
-	public static int lowerX;
-	public static int lowerY;
+	public static int x;
+	public static int y;
 
 	public StationLower(int x, int y) {
 		super(x, y, Sprite.liftStationLower);
 
-		lowerX = x;
-		lowerY = y;
+		StationLower.x = x;
+		StationLower.y = y;
 	}
 
 	@Override
@@ -25,7 +25,11 @@ public class StationLower extends Station {
 		g.drawLine(getDrawX() + sprite.getWidth() / 2 + 29, getDrawY() - 100, getDrawX() + sprite.getWidth() / 2 + 29,
 				getDrawY() + 10);
 
+		// g.drawRect(getDrawX(), getDrawY() + 140, 250, 100);
+
 		super.drawMe(g);
+
+		// g.drawString("x: " + x + " y: " + y, getDrawX(), getDrawY());
 	}
 
 }
