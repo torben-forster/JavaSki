@@ -43,7 +43,7 @@ public class Player extends Drawable {
 	boolean inSlalom;
 	public double slalomTimer;
 
-	static final double GRAVITY = -0.5;
+	public static final double GRAVITY = -0.5;
 
 	int totalScore;
 	int currentScore;
@@ -352,6 +352,8 @@ public class Player extends Drawable {
 			speed = 0;
 			x += Math.signum(x - coll.x);
 			y += Math.signum(y - coll.y);
+		} else if (coll instanceof Snowboarder) {
+			((Snowboarder) coll).flip();
 		}
 	}
 

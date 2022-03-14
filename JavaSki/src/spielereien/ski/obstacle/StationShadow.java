@@ -1,9 +1,5 @@
 package spielereien.ski.obstacle;
 
-import java.awt.Graphics;
-
-import spielereien.ski.Drawable;
-import spielereien.ski.SkiPanel;
 import spielereien.ski.sprites.Sprite;
 
 class StationShadow extends Collideable {

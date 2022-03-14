@@ -280,12 +280,12 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			g.step();
 		}
 
-		//prevCollisiontime = System.currentTimeMillis();
+		// prevCollisiontime = System.currentTimeMillis();
 		player.handleCollisions(collideables);
 		for (Snowboarder s : Snowboarder.allSnowboarders) {
 			s.handleCollisions(collideables);
 		}
-		//collisiontime = System.currentTimeMillis();
+		// collisiontime = System.currentTimeMillis();
 
 		player.handleSlalom(PoleSlalom.allSlalomSigns);
 
@@ -387,7 +387,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		System.out.println("generating obstacles");
 
-		new Snowboarder(5500, -700);
+		new Snowboarder(0, 0);
 
 		/*
 		 * creates obstacles in two rows at the same height, with player's wrap() that
