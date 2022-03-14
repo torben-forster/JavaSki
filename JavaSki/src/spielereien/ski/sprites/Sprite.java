@@ -55,6 +55,7 @@ public class Sprite {
 	public static BufferedImage liftBuilding;
 	public static BufferedImage liftStationLower;
 	public static BufferedImage liftStationUpper;
+	public static BufferedImage liftStationUpperRoof;
 	public static BufferedImage liftStationShadow;
 
 	public static void bufferImages() {
@@ -105,6 +106,7 @@ public class Sprite {
 			liftBuilding = ImageIO.read(new File(path + "liftBuilding.png"));
 			liftStationLower = ImageIO.read(new File(path + "liftStationLower.png"));
 			liftStationUpper = ImageIO.read(new File(path + "liftStationUpper.png"));
+			liftStationUpperRoof = ImageIO.read(new File(path + "liftStationUpperRoof.png"));
 			liftStationShadow = ImageIO.read(new File(path + "liftStationShadow.png"));
 
 			liftMast = ImageIO.read(new File(path + "liftMast.png"));
@@ -131,5 +133,7 @@ public class Sprite {
 		g.drawImage(sprite, x, y, null);
 
 	}
+	
+	
 
 }

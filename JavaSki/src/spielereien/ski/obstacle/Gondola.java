@@ -4,11 +4,10 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import spielereien.ski.sprites.Sprite;
-
 public abstract class Gondola extends Collideable {
 
 	public boolean readyForPlayer;
+	Shadow myShadow;
 
 	public static ArrayList<Gondola> everyGondola = new ArrayList<Gondola>();
 
@@ -16,6 +15,8 @@ public abstract class Gondola extends Collideable {
 		super(x, y, sprite);
 
 		readyForPlayer = false;
+
+		myShadow = new Shadow();
 
 		everyGondola.add(this);
 	}
@@ -29,16 +30,7 @@ public abstract class Gondola extends Collideable {
 		return mask;
 	}
 
-	@Override
-	public void drawMe(Graphics g) {
-		super.drawMe(g);
-
-		g.setColor(Sprite.SHADOW);
-		g.fillOval(getDrawX() + sprite.getWidth() / 2 - 10, getDrawY() + sprite.getHeight(), 20, 8);
-	}
-
 	public void step() {
-		readyForPlayer = false;
 
 		if (this instanceof GondolaUp) {
 			y -= 3;
@@ -46,6 +38,7 @@ public abstract class Gondola extends Collideable {
 			y += 3;
 		}
 
+		readyForPlayer = false;
 		// gondola <-> station wrapping
 		if (y < StationUpper.y + 20) {
 			y = StationLower.y + 20;
@@ -54,6 +47,17 @@ public abstract class Gondola extends Collideable {
 		if (y > StationLower.y + 20) {
 			y = StationUpper.y + 20;
 		}
+
+		if (y >= StationMiddle.y + 15 && y <= StationMiddle.y + 25) {
+			readyForPlayer = true;
+		}
+
+		if (y >= StationMiddle.y - 80 && y <= StationMiddle.y) {
+			myShadow.enabled = false;
+		}
+
+		myShadow.x = x;
+		myShadow.y = y;
 	}
 
 }

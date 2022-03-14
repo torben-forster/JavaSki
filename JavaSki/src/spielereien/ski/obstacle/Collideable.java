@@ -13,8 +13,6 @@ public class Collideable extends Drawable {
 	 * snow-hill, bush, deep snow, lift, snowboarder, beginner, dog
 	 */
 
-
-
 	public int maskX;
 	public int maskY;
 	public int maskZ;
@@ -25,14 +23,13 @@ public class Collideable extends Drawable {
 	int spriteOriginX;
 	int spriteOriginY;
 
-
 	public boolean jumpable;// whether you jump off of the obstacle when landing on it
 	public boolean ramp;
 	public double jumpMult; // jump Multiplier if jumped
 
 	public Collideable(int x, int y, BufferedImage sprite) {
 		super();
-		
+
 		this.x = x;
 		this.y = y;
 
@@ -52,8 +49,6 @@ public class Collideable extends Drawable {
 
 		SkiPanel.collideables.add(this);
 	}
-
-
 
 	public int getDrawX() {
 		return (int) (x - SkiPanel.player.x + dimension.getSize().getWidth() * 0.5 - spriteOriginX);

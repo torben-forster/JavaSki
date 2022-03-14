@@ -11,9 +11,11 @@ import spielereien.ski.obstacle.DeepSnow;
 import spielereien.ski.obstacle.FinishLine;
 import spielereien.ski.obstacle.GondolaUp;
 import spielereien.ski.obstacle.PoleSlalom;
+import spielereien.ski.obstacle.Shadow;
 import spielereien.ski.obstacle.Solid;
 import spielereien.ski.obstacle.StartLine;
 import spielereien.ski.obstacle.StationLower;
+import spielereien.ski.obstacle.StationMiddle;
 import spielereien.ski.obstacle.StationUpper;
 import spielereien.ski.sprites.Sprite;
 
@@ -52,11 +54,14 @@ public class Player extends Drawable {
 	int currentScoreTimer;
 	int skipTimer;
 
+	boolean heldG;
+
 	int heading; // 0 is down, negative is left, positive is right
 	int airHeading;
 	double speed;
 
 	GondolaUp myGondola;
+	Shadow myShadow;
 
 	BufferedImage currentSprite;
 
@@ -84,6 +89,8 @@ public class Player extends Drawable {
 		this.currentScoreTimer = -1;
 		this.skipTimer = 0;
 
+		this.heldG = false;
+
 		this.totalScore = 0;
 		this.currentScore = 0;
 
@@ -92,6 +99,8 @@ public class Player extends Drawable {
 
 		this.state = SITTING;
 		this.currentSprite = Sprite.playerSitting;
+
+		this.myShadow = new Shadow();
 	}
 
 	public void step() {
@@ -169,14 +178,27 @@ public class Player extends Drawable {
 
 		x += speedX;
 		y += speedY;
+
+		myShadow.x = x;
+		myShadow.y = y;
 	}
 
 	private boolean atStation() {
-		if (state == GONDOLA) {
+		if (state == GONDOLA || !onGround()) {
 			return false;
 		}
 		int stationX = StationLower.x - Sprite.liftStationLower.getWidth() / 2;
 		int stationY = StationLower.y;
+
+		if (x > stationX && x < stationX + 250) {
+
+			if (y > stationY && y < stationY + 150) {
+				return true;
+			}
+		}
+
+		stationX = StationMiddle.x - Sprite.liftStationLower.getWidth() / 2;
+		stationY = StationMiddle.y;
 
 		if (x > stationX && x < stationX + 250) {
 
@@ -218,9 +240,13 @@ public class Player extends Drawable {
 		if (skipTimer > 30) {
 			leaveGondola();
 		}
-		if (skipTimer > 0) {
-			skipTimer -= 1;
+
+		if (heldG) {
+			skipTimer += 1;
+		} else {
+			skipTimer = 0;
 		}
+		heldG = false;
 
 		if (inSlalom) {
 			slalomTimer += 0.03;
@@ -302,7 +328,7 @@ public class Player extends Drawable {
 		} else if (coll instanceof StartLine) {
 			inSlalom = true;
 			slalomTimer = 0;
-			
+
 			PoleSlalom.resetAll();
 
 		} else if (coll instanceof FinishLine) {
@@ -524,7 +550,7 @@ public class Player extends Drawable {
 
 	public void inputHeldG() {
 		if (state == GONDOLA) {
-			skipTimer += 5;
+			heldG = true;
 		}
 	}
 
@@ -605,8 +631,8 @@ public class Player extends Drawable {
 		myGondola = null;
 		state = SITTING;
 
-		x = StationUpper.x + Sprite.liftStationUpper.getWidth() / 2 + Sprite.liftBuilding.getWidth() - 24;
-		y = StationUpper.y + Sprite.liftStationUpper.getHeight() / 2 - 24;
+		x = StationUpper.exitX;
+		y = StationUpper.exitY;
 		z = 0;
 		speed = 0;
 	}
@@ -659,7 +685,11 @@ public class Player extends Drawable {
 		g.setColor(Color.BLACK);
 		// g.drawString("x: " + x + " y: " + y, drawX, drawY);
 
-		drawShadow(g, drawX, drawY);
+		if (onGround()) {
+			myShadow.enabled = false;
+		} else {
+			myShadow.enabled = true;
+		}
 
 		drawPlayerSprite(g, drawX, drawY);
 
@@ -691,6 +721,12 @@ public class Player extends Drawable {
 	private void drawSkipPrompt(Graphics g, int drawX, int drawY) {
 		if (state == GONDOLA) {
 			g.drawString("hold 'G' to skip to the top", drawX + 20, drawY - 10);
+
+			g.setColor(Sprite.SHADOW);
+			g.drawLine(drawX + 20, drawY - 9, drawX + 20 + 26 * 5, drawY - 9);
+			g.setColor(Color.BLACK);
+			g.drawLine(drawX + 20, drawY - 9, (int) (drawX + 20 + (26 * 5 * Math.min(skipTimer, 30.0) / 30)),
+					drawY - 9);
 		}
 	}
 
@@ -701,13 +737,6 @@ public class Player extends Drawable {
 			} else {
 				g.drawString("press 'G' to stop waiting for the chairlift", drawX + 20, drawY - 10);
 			}
-		}
-	}
-
-	private void drawShadow(Graphics g, int drawX, int drawY) {
-		if (!onGround()) {
-			g.setColor(Sprite.SHADOW);
-			g.fillOval(drawX - 10, (int) (drawY + z - 3), 20, 6);
 		}
 	}
 

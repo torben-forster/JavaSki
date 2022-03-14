@@ -10,13 +10,19 @@ public class StationUpper extends Station {
 	public static int x;
 	public static int y;
 
+	public static int exitX;
+	public static int exitY;
+
 	public StationUpper(int x, int y) {
 		super(x, y, Sprite.liftStationUpper);
 
-		new StationUpperShadow(x, y + sprite.getHeight() - spriteOriginY);
+		new StationShadow(x, y + sprite.getHeight() - spriteOriginY);
 
 		StationUpper.x = x;
 		StationUpper.y = y;
+
+		StationUpper.exitX = x + Sprite.liftStationUpper.getWidth() / 2 + Sprite.liftBuilding.getWidth() - 24;
+		StationUpper.exitY = y + Sprite.liftStationUpper.getHeight() / 2 - 24;
 	}
 
 	@Override
@@ -30,17 +36,4 @@ public class StationUpper extends Station {
 		super.drawMe(g);
 	}
 
-	private class StationUpperShadow extends Collideable {
-
-		public StationUpperShadow(int x, int y) {
-			super(x, y, Sprite.liftStationShadow);
-
-		}
-
-		@Override
-		public double getDrawHeight() {
-			return y + sprite.getHeight() - spriteOriginY + 100;
-		}
-
-	}
 }

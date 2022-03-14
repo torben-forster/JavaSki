@@ -3,6 +3,7 @@ package spielereien.ski.obstacle;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import spielereien.ski.SkiPanel;
 import spielereien.ski.sprites.Sprite;
 
 public class LiftMast extends Collideable {
@@ -33,20 +34,32 @@ public class LiftMast extends Collideable {
 
 	@Override
 	public void drawMe(Graphics g) {
+		if (nr == SkiPanel.LASTMAST) {
+			drawCables(g, 490);
+			
+		} else if (nr == 7) {
+			drawCables(g, 440);
+			
+		} else {
+			drawCables(g, 990);
+		}
+
 		super.drawMe(g);
+
 		if (nr != -1) {
 			g.setColor(Color.WHITE);
 			String nummer = Integer.toString(nr);
 			g.drawString(nummer, getDrawX() + sprite.getWidth() / 2 - 3 * nummer.length(), getDrawY() + 90);
 		}
+
 	}
 
-	public void drawCables(Graphics g) {
+	private void drawCables(Graphics g, int length) {
 		g.setColor(Color.BLACK);
-		g.drawLine(getDrawX() + sprite.getWidth() / 2 - 29, getDrawY() - 500, getDrawX() + sprite.getWidth() / 2 - 29,
-				getDrawY() + 500);
-		g.drawLine(getDrawX() + sprite.getWidth() / 2 + 29, getDrawY() - 500, getDrawX() + sprite.getWidth() / 2 + 29,
-				getDrawY() + 500);
+		g.drawLine(getDrawX() + sprite.getWidth() / 2 - 29, getDrawY() - length,
+				getDrawX() + sprite.getWidth() / 2 - 29, getDrawY() + 5);
+		g.drawLine(getDrawX() + sprite.getWidth() / 2 + 29, getDrawY() - length,
+				getDrawX() + sprite.getWidth() / 2 + 29, getDrawY() + 5);
 	}
 
 }

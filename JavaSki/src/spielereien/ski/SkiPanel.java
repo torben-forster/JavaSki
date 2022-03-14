@@ -37,6 +37,7 @@ import spielereien.ski.obstacle.PoleSlalomBlue;
 import spielereien.ski.obstacle.SmallHill;
 import spielereien.ski.obstacle.StartLine;
 import spielereien.ski.obstacle.StationLower;
+import spielereien.ski.obstacle.StationMiddle;
 import spielereien.ski.obstacle.StationUpper;
 import spielereien.ski.obstacle.Stump;
 import spielereien.ski.obstacle.Tree;
@@ -56,6 +57,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 	final int windowWidth = 1000;
 	final int windowHeight = 1000;
+
+	public final static int LASTMAST = 16;
 
 	static Dimension windowDimension;
 
@@ -128,6 +131,10 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 				heldKeyInputs(keyHeld);
 				heldTicker = 3;
 			}
+
+			if (keyHeld.equals("G")) {
+				player.inputHeldG();
+			}
 		}
 
 		for (String keyPressed : pressedKeys.keySet()) {
@@ -158,9 +165,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			} else if (keyHeld.equals("RIGHT")) {
 				player.inputRight();
 			}
-			if (keyHeld.equals("G")) {
-				player.inputHeldG();
-			}
 		}
 	}
 
@@ -184,7 +188,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 				reset();
 			} else if (keyPressed.equals("ENTER")) {
 				player.x = 5300;
-				player.y = 15000;
+				player.y = 8000;
 			} else if (keyPressed.equals("F")) {
 				if (player.turbo < 2) {
 					player.turbo = 3;
@@ -208,7 +212,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		player.heading = 0;
 		player.currentScoreTimer = 0;
 		player.state = 2;
-		
+
 		Drawable.updateDimension(windowDimension);
 
 		gameOver = false;
@@ -306,7 +310,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		int xGondolaUp = x + 28;
 		int xGondolaDown = x - 30;
 
-		int mastZaehler = 16;
+		int mastZaehler = LASTMAST;
 		for (int y = 0; y <= 15000; y += 1000) {
 
 			new LiftMast(x, y, mastZaehler--);
@@ -317,7 +321,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			new GondolaDown(xGondolaDown, y);
 		}
 		new StationUpper(x, -600);
-		new StationLower(x, 15500);
+		new StationMiddle(x, 8500);
+		new StationLower(x, 15480);
 	}
 
 	private void spawnSlalomCourse() {
@@ -427,7 +432,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		for (Drawable d : drawables) {
 			if (d instanceof LiftMast) {
-				((LiftMast) d).drawCables(g);
+				// ((LiftMast) d).drawCables(g);
 			}
 		}
 
