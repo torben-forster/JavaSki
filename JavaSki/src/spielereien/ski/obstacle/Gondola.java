@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import spielereien.ski.Shadow;
+
 public abstract class Gondola extends Collideable {
 
 	public boolean readyForPlayer;

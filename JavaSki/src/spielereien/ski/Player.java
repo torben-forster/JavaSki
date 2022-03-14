@@ -11,7 +11,7 @@ import spielereien.ski.obstacle.DeepSnow;
 import spielereien.ski.obstacle.FinishLine;
 import spielereien.ski.obstacle.GondolaUp;
 import spielereien.ski.obstacle.PoleSlalom;
-import spielereien.ski.obstacle.Shadow;
+import spielereien.ski.obstacle.Snowboarder;
 import spielereien.ski.obstacle.Solid;
 import spielereien.ski.obstacle.StartLine;
 import spielereien.ski.obstacle.StationLower;
@@ -214,8 +214,14 @@ public class Player extends Drawable {
 		// create illusion of endless map
 		if (SkiPanel.player.x < 2000) {
 			SkiPanel.player.x += 5000;
+			for (Snowboarder s : Snowboarder.allSnowboarders) {
+				s.x += 5000;
+			}
 		} else if (SkiPanel.player.x > 8000) {
 			SkiPanel.player.x -= 5000;
+			for (Snowboarder s : Snowboarder.allSnowboarders) {
+				s.x -= 5000;
+			}
 		}
 	}
 
@@ -468,7 +474,7 @@ public class Player extends Drawable {
 			if (state == SKIING) {
 
 				if (heading == -4) {
-					speed += 0.5 * turbo;
+					speed += 0.75 * turbo;
 				} else if (heading > -4) {
 					heading--;
 				}
@@ -498,7 +504,7 @@ public class Player extends Drawable {
 			if (state == SKIING) {
 
 				if (heading == 4) {
-					speed += 0.5 * turbo;
+					speed += 0.75 * turbo;
 				} else if (heading < 4) {
 					heading++;
 				}
@@ -625,6 +631,7 @@ public class Player extends Drawable {
 		x = myGondola.x;
 		y = myGondola.y;
 		z = 80;
+		speed = 0;
 	}
 
 	public void leaveGondola() {
@@ -685,7 +692,7 @@ public class Player extends Drawable {
 		g.setColor(Color.BLACK);
 		// g.drawString("x: " + x + " y: " + y, drawX, drawY);
 
-		if (onGround()) {
+		if (onGround() || state == GONDOLA) {
 			myShadow.enabled = false;
 		} else {
 			myShadow.enabled = true;
@@ -722,11 +729,13 @@ public class Player extends Drawable {
 		if (state == GONDOLA) {
 			g.drawString("hold 'G' to skip to the top", drawX + 20, drawY - 10);
 
-			g.setColor(Sprite.SHADOW);
-			g.drawLine(drawX + 20, drawY - 9, drawX + 20 + 26 * 5, drawY - 9);
-			g.setColor(Color.BLACK);
-			g.drawLine(drawX + 20, drawY - 9, (int) (drawX + 20 + (26 * 5 * Math.min(skipTimer, 30.0) / 30)),
-					drawY - 9);
+			if (skipTimer > 0) {
+				g.setColor(Sprite.SHADOW);
+				g.drawLine(drawX + 20, drawY - 9, drawX + 20 + 26 * 5, drawY - 9);
+				g.setColor(Color.BLACK);
+				g.drawLine(drawX + 20, drawY - 9, (int) (drawX + 20 + (26 * 5 * Math.min(skipTimer, 30.0) / 30)),
+						drawY - 9);
+			}
 		}
 	}
 

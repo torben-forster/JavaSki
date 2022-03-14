@@ -1,9 +1,7 @@
-package spielereien.ski.obstacle;
+package spielereien.ski;
 
 import java.awt.Graphics;
 
-import spielereien.ski.Drawable;
-import spielereien.ski.SkiPanel;
 import spielereien.ski.sprites.Sprite;
 
 public class Shadow extends Drawable {
