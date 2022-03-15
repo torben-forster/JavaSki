@@ -20,16 +20,12 @@ public class StationLower extends Station {
 	@Override
 	public void drawMe(Graphics g) {
 		g.setColor(Color.BLACK);
-		g.drawLine(getDrawX() + sprite.getWidth() / 2 - 29, getDrawY() - 100, getDrawX() + sprite.getWidth() / 2 - 29,
+		g.drawLine(getDrawX() + sprite.getWidth() / 2 - 29, getDrawY() - 490, getDrawX() + sprite.getWidth() / 2 - 29,
 				getDrawY() + 10);
-		g.drawLine(getDrawX() + sprite.getWidth() / 2 + 29, getDrawY() - 100, getDrawX() + sprite.getWidth() / 2 + 29,
+		g.drawLine(getDrawX() + sprite.getWidth() / 2 + 29, getDrawY() - 490, getDrawX() + sprite.getWidth() / 2 + 29,
 				getDrawY() + 10);
-
-		// g.drawRect(getDrawX(), getDrawY() + 140, 250, 100);
 
 		super.drawMe(g);
-
-		// g.drawString("x: " + x + " y: " + y, getDrawX(), getDrawY());
 	}
 
 }

@@ -35,8 +35,10 @@ import spielereien.ski.obstacle.PoleSlalom;
 import spielereien.ski.obstacle.PoleSlalomRed;
 import spielereien.ski.obstacle.PoleSlalomBlue;
 import spielereien.ski.obstacle.SmallHill;
+import spielereien.ski.obstacle.Snowboarder;
 import spielereien.ski.obstacle.StartLine;
 import spielereien.ski.obstacle.StationLower;
+import spielereien.ski.obstacle.StationMiddle;
 import spielereien.ski.obstacle.StationUpper;
 import spielereien.ski.obstacle.Stump;
 import spielereien.ski.obstacle.Tree;
@@ -48,6 +50,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	final static long SEED = System.currentTimeMillis();
+
 	boolean gameOver = false;
 
 	Timer timer;
@@ -56,6 +60,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 	final int windowWidth = 1000;
 	final int windowHeight = 1000;
+
+	public final static int LASTMAST = 16;
 
 	static Dimension windowDimension;
 
@@ -128,6 +134,10 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 				heldKeyInputs(keyHeld);
 				heldTicker = 3;
 			}
+
+			if (keyHeld.equals("G")) {
+				player.inputHeldG();
+			}
 		}
 
 		for (String keyPressed : pressedKeys.keySet()) {
@@ -158,9 +168,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			} else if (keyHeld.equals("RIGHT")) {
 				player.inputRight();
 			}
-			if (keyHeld.equals("G")) {
-				player.inputHeldG();
-			}
 		}
 	}
 
@@ -184,7 +191,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 				reset();
 			} else if (keyPressed.equals("ENTER")) {
 				player.x = 5300;
-				player.y = 15000;
+				player.y = 8000;
 			} else if (keyPressed.equals("F")) {
 				if (player.turbo < 2) {
 					player.turbo = 3;
@@ -197,6 +204,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		}
 		if (keyPressed.equals("P")) {
 			paused = !paused;
+			getGraphics().drawString("PAUSED - PRESS 'P' TO CONTINUE", (int) (windowDimension.getWidth() / 2 - 30 * 5),
+					(int) (windowDimension.getHeight() / 2));
 		}
 	}
 
@@ -208,7 +217,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		player.heading = 0;
 		player.currentScoreTimer = 0;
 		player.state = 2;
-		
+
 		Drawable.updateDimension(windowDimension);
 
 		gameOver = false;
@@ -263,13 +272,20 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		player.step();
 		player.wrap();
 
+		for (Snowboarder s : Snowboarder.allSnowboarders) {
+			s.step();
+		}
+
 		for (Gondola g : Gondola.everyGondola) {
 			g.step();
 		}
 
-		prevCollisiontime = System.currentTimeMillis();
+		// prevCollisiontime = System.currentTimeMillis();
 		player.handleCollisions(collideables);
-		collisiontime = System.currentTimeMillis();
+		for (Snowboarder s : Snowboarder.allSnowboarders) {
+			s.handleCollisions(collideables);
+		}
+		// collisiontime = System.currentTimeMillis();
 
 		player.handleSlalom(PoleSlalom.allSlalomSigns);
 
@@ -299,6 +315,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	}
 
 	private void spawnLift() {
+		System.out.println("generating lift");
 
 		clearArea(4900, -700, 5100, 15600);
 
@@ -306,7 +323,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		int xGondolaUp = x + 28;
 		int xGondolaDown = x - 30;
 
-		int mastZaehler = 16;
+		int mastZaehler = LASTMAST;
 		for (int y = 0; y <= 15000; y += 1000) {
 
 			new LiftMast(x, y, mastZaehler--);
@@ -317,16 +334,20 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			new GondolaDown(xGondolaDown, y);
 		}
 		new StationUpper(x, -600);
-		new StationLower(x, 15500);
+		new StationMiddle(x, 8500);
+		new StationLower(x, 15480);
+
+		System.out.println("lift generated");
 	}
 
 	private void spawnSlalomCourse() {
 		// player starts at x = 5000, y = -600
+		System.out.println("generating slalom");
 
 		int x = 4300;
 		int y = 250;
 
-		int rangeX = 175;
+		int randomizerX = 100;
 
 		clearArea(x - 200, y - 500, x + 200, y - 200);
 
@@ -338,7 +359,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		for (; y < 8000; y += 250) {
 
-			int spawnX = (int) (x + Math.random() * rangeX * 2 - rangeX);
+			int spawnX = (int) (x + myAlgorithm(y) * randomizerX * 2 - randomizerX);
 			clearArea(spawnX - 100, y - 100, spawnX + 100, y + 100);
 
 			if (y % 500 == 0) {
@@ -349,12 +370,24 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		}
 
+		clearArea(x - 200, y - 200, x + 200, y - 200);
+
 		Sign.newSignFinishLeft(x + 75, y);
 		Sign.newSignFinishRight(x - 75, y);
 		new FinishLine(x, y + 1);
+
+		System.out.println("slalom generated");
+	}
+
+	private double myAlgorithm(int x) {
+		return Math.sin(x * x * SEED);
 	}
 
 	private void spawnObstacles() {
+
+		System.out.println("generating obstacles");
+
+		new Snowboarder(0, 0);
 
 		/*
 		 * creates obstacles in two rows at the same height, with player's wrap() that
@@ -408,6 +441,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			}
 		}
 
+		System.out.println("obstacles generated");
+
 	}
 
 	protected void paintComponent(Graphics g) {
@@ -423,12 +458,6 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		for (Drawable d : drawables) {
 			d.drawMe(g);
-		}
-
-		for (Drawable d : drawables) {
-			if (d instanceof LiftMast) {
-				((LiftMast) d).drawCables(g);
-			}
 		}
 
 		// drawDebug(g);

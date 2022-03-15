@@ -55,7 +55,14 @@ public class Sprite {
 	public static BufferedImage liftBuilding;
 	public static BufferedImage liftStationLower;
 	public static BufferedImage liftStationUpper;
+	public static BufferedImage liftStationUpperRoof;
 	public static BufferedImage liftStationShadow;
+
+	public static BufferedImage snowboarderRight;
+	public static BufferedImage snowboarderLeft;
+	public static BufferedImage snowboarderFlipLeft;
+	public static BufferedImage snowboarderFlipCenter;
+	public static BufferedImage snowboarderFlipRight;
 
 	public static void bufferImages() {
 
@@ -105,11 +112,18 @@ public class Sprite {
 			liftBuilding = ImageIO.read(new File(path + "liftBuilding.png"));
 			liftStationLower = ImageIO.read(new File(path + "liftStationLower.png"));
 			liftStationUpper = ImageIO.read(new File(path + "liftStationUpper.png"));
+			liftStationUpperRoof = ImageIO.read(new File(path + "liftStationUpperRoof.png"));
 			liftStationShadow = ImageIO.read(new File(path + "liftStationShadow.png"));
 
 			liftMast = ImageIO.read(new File(path + "liftMast.png"));
 			liftGondolaUp = ImageIO.read(new File(path + "liftGondolaUp.png"));
 			liftGondolaDown = ImageIO.read(new File(path + "liftGondolaDown.png"));
+
+			snowboarderLeft = ImageIO.read(new File(path + "snowboarderLeft.png"));
+			snowboarderRight = ImageIO.read(new File(path + "snowboarderRight.png"));
+			snowboarderFlipLeft = ImageIO.read(new File(path + "snowboarderFlipLeft.png"));
+			snowboarderFlipCenter = ImageIO.read(new File(path + "snowboarderFlipCenter.png"));
+			snowboarderFlipRight = ImageIO.read(new File(path + "snowboarderFlipRight.png"));
 
 			System.out.println("images loaded");
 		} catch (IOException e) {
