@@ -31,4 +31,8 @@ public class Sign extends Collideable {
 	public static void newSignFinishRight(int x, int y) {
 		new Sign(x, y, Sprite.signFinishRight);
 	}
+	
+	public static void newSignCliff(int x, int y) {
+		new Sign(x,y,Sprite.signCliff);
+	}
 }

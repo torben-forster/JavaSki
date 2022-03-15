@@ -17,6 +17,11 @@ public class Snowboarder extends Collideable {
 	int sinceLastTurn;
 	int flipTimer;
 
+	int state;
+
+	final static int BOARDING = 0;
+	final static int CLIFF = 1;
+
 	double z;
 	double speedZ;
 
@@ -28,31 +33,49 @@ public class Snowboarder extends Collideable {
 		this.sinceLastTurn = 0;
 		this.flipTimer = -1;
 
+		this.state = BOARDING;
+
 		this.myShadow = new Shadow();
 
 		allSnowboarders.add(this);
 	}
 
 	public void step() {
-		if (Math.random() * 40 + 20 < sinceLastTurn) {
-			turn();
-		}
 
-		sinceLastTurn++;
+		if (state == BOARDING) {
 
-		x += 5 * heading;
-		y += 10;
+			wrap();
 
-		if (z > 0) {
+			if (Math.random() * 40 + 20 < sinceLastTurn) {
+				turn();
+			}
+
+			sinceLastTurn++;
+
+			x += 5 * heading;
+			y += 10;
+
+			if (z > 0) {
+				speedZ += Player.GRAVITY;
+				z += speedZ;
+			}
+			if (z < 0) {
+				speedZ = 0;
+				z = 0;
+			}
+
+			myShadow.x = x;
+			myShadow.y = y;
+		} else {
+			y += 10;
 			speedZ += Player.GRAVITY;
 			z += speedZ;
 		}
-		if (z < 0) {
-			speedZ = 0;
-			z = 0;
-		}
+	}
 
+	private void wrap() {
 		if (!onScreen(getDrawX(), getDrawY(), Math.max((int) dimension.getHeight(), (int) dimension.getWidth()))) {
+			// state = BOARDING;
 
 			double randomX = Math.random() * dimension.getWidth() * 0.5 - dimension.getWidth() * 0.25;
 			double randomY = Math.random() * dimension.getHeight() * 0.25 - dimension.getWidth() * 0.75;
@@ -66,9 +89,6 @@ public class Snowboarder extends Collideable {
 			}
 
 		}
-
-		myShadow.x = x;
-		myShadow.y = y;
 	}
 
 	private void turn() {
@@ -81,6 +101,9 @@ public class Snowboarder extends Collideable {
 	}
 
 	public void handleCollisions(List<Collideable> collideables) {
+		if (flipTimer != -1) {
+			return;
+		}
 
 		for (Collideable c : collideables) {
 			if (c.equals(this)) {
@@ -91,6 +114,11 @@ public class Snowboarder extends Collideable {
 			double dY = Math.abs(y - c.y);
 
 			if (dX < 5 + c.getMaskX((int) z) && dY < 5 + c.maskY) {
+				if (c instanceof Cliff) {
+					state = CLIFF;
+					continue;
+				}
+
 				flip();
 				if (c.ramp) {
 					speedZ += c.jumpMult;
@@ -102,6 +130,10 @@ public class Snowboarder extends Collideable {
 	public void flip() {
 		turn();
 		flipTimer = 0;
+		jump();
+	}
+
+	private void jump() {
 		speedZ = 4;
 		z = 0.1;
 	}
@@ -119,7 +151,7 @@ public class Snowboarder extends Collideable {
 		}
 
 		myShadow.enabled = false;
-		if (z > 0) {
+		if (z > 0 && state == BOARDING) {
 			myShadow.enabled = true;
 		}
 
@@ -127,6 +159,10 @@ public class Snowboarder extends Collideable {
 	}
 
 	private void getSprite() {
+		if (state == CLIFF) {
+			sprite = Sprite.snowboarderCliff;
+			return;
+		}
 		if (flipTimer == -1) {
 			switch (heading) {
 			case 1:

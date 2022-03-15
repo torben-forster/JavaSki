@@ -6,6 +6,7 @@ import java.util.List;
 
 import java.awt.image.BufferedImage;
 
+import spielereien.ski.obstacle.Cliff;
 import spielereien.ski.obstacle.Collideable;
 import spielereien.ski.obstacle.DeepSnow;
 import spielereien.ski.obstacle.FinishLine;
@@ -36,6 +37,7 @@ public class Player extends Drawable {
 	final static int SLOW = 3;
 	final static int GONDOLA = 4;
 	final static int WAITING = 5;
+	final static int GAMEOVER = 6;
 
 	final static int FRONTFLIP = 10;
 	final static int BACKFLIP = -10;
@@ -103,53 +105,76 @@ public class Player extends Drawable {
 		this.myShadow = new Shadow();
 	}
 
+	private void stop() {
+		speed = 0;
+		speedZ = 0;
+		heading = 0;
+		climbingTimer = 0;
+	}
+
 	public void step() {
 
 		handleTimers();
 
-		if (state == GONDOLA) {
-			speed = 0;
+		switch (state) {
+		case SKIING:
+			if (onGround()) {
+				speed += Math.cos(Math.PI * heading * 0.125) * 0.25 * turbo;
+				speed -= speed * speed * 0.00125;
+
+				if ((heading == 4 || heading == -4)) {
+					// stop early when going horizontal
+					speed -= speed * speed * 0.015;
+				}
+			}
+			break;
+		case DOWN:
+			if (onGround()) {
+				stop();
+			}
+			break;
+		case SITTING:
+			break;
+		case SLOW:
+			turnDownwards();
+			speed += Math.cos(Math.PI * heading * 0.125) * 0.5;
+			// more friction
+			speed -= speed * speed * 0.05;
+			state = SKIING;
+			break;
+		case GONDOLA:
+			stop();
 			x = myGondola.x + 8;
 			y = myGondola.y - 1;
-			z = 80;
+			z = 81;
 
 			if (y < StationUpper.y + 25) {
 				leaveGondola();
 			}
-			return;
-		}
-
-		if (state == WAITING) {
-			speed = 0;
+			break;
+		case WAITING:
+			stop();
 			GondolaUp currentClosest = findClosestGondolaUp();
 			if (currentClosest.readyForPlayer) {
 				enterGondola(currentClosest);
 			}
-			return;
+			break;
+		case GAMEOVER:
+			heading = 0;
+
+			speedZ -= speed;
+			speed = 0;
+
+			speedZ += GRAVITY;
+			speedZ += speedZ * speedZ * 0.01;
+			z += speedZ;
+			break;
 		}
 
-		if (state == SKIING && onGround()) {
-
-			speed += Math.cos(Math.PI * heading * 0.125) * 0.25 * turbo;
-			speed -= speed * speed * 0.00125;
-
-			if ((heading == 4 || heading == -4)) {
-				// stop early when going horizontal
-				speed -= speed * speed * 0.015;
-			}
-
-		} else if (state == SLOW) {
-			turnDownwards();
-
-			speed += Math.cos(Math.PI * heading * 0.125) * 0.5;
-			// more friction
-			speed -= speed * speed * 0.05;
-
-			state = SKIING;
+		if (speed < 0) {
+			speed = 0;
 		}
-
-		if (!onGround()) {
-
+		if (!onGround() && state != GAMEOVER) {
 			speedZ += GRAVITY;
 			z += speedZ;
 
@@ -158,20 +183,9 @@ public class Player extends Drawable {
 			}
 		}
 
-		if (speed < 0) {
-			speed = 0;
-		}
-
-		if (state == DOWN && onGround()) {
-			speed = 0;
-		}
-
 		speedX = Math.sin(Math.PI * heading * 0.125) * speed;
 		speedY = Math.cos(Math.PI * heading * 0.125) * speed;
 
-		if (state == DOWN) {
-			climbingTimer = 0;
-		}
 		if (climbingTimer > 0) {
 			speedY = -1.5 * turbo;
 		}
@@ -270,6 +284,7 @@ public class Player extends Drawable {
 			if (sign.alreadyPassed) {
 				continue;
 			}
+
 			if (y > sign.y) {
 				double dX = x - sign.x;
 
@@ -294,7 +309,7 @@ public class Player extends Drawable {
 	}
 
 	public void handleCollisions(List<Collideable> collideables) {
-		if (state == WAITING) {
+		if (state == GAMEOVER) {
 			return;
 		}
 
@@ -325,7 +340,7 @@ public class Player extends Drawable {
 			kickedJump(coll.jumpMult);
 
 		} else if (coll instanceof DeepSnow) {
-			if (Math.abs(heading) != 4 && state != DOWN && state != SITTING) {
+			if (Math.abs(heading) != 4 && state == SKIING) {
 				state = SLOW;
 			}
 			if (speedZ < 0) {
@@ -340,6 +355,11 @@ public class Player extends Drawable {
 		} else if (coll instanceof FinishLine) {
 			inSlalom = false;
 
+		} else if (coll instanceof Cliff) {
+			state = GAMEOVER;
+			currentScoreTimer = 0;
+			new EndPanel();
+
 		} else {
 			accident();
 		}
@@ -349,10 +369,15 @@ public class Player extends Drawable {
 		}
 
 		if (coll instanceof Solid) {
+
 			speed = 0;
 			x += Math.signum(x - coll.x);
 			y += Math.signum(y - coll.y);
-		} else if (coll instanceof Snowboarder) {
+		}
+
+		if (coll instanceof Snowboarder)
+
+		{
 			((Snowboarder) coll).flip();
 		}
 	}
@@ -694,7 +719,7 @@ public class Player extends Drawable {
 		g.setColor(Color.BLACK);
 		// g.drawString("x: " + x + " y: " + y, drawX, drawY);
 
-		if (onGround() || state == GONDOLA) {
+		if (onGround() || state == GONDOLA || state == GAMEOVER) {
 			myShadow.enabled = false;
 		} else {
 			myShadow.enabled = true;
@@ -778,6 +803,9 @@ public class Player extends Drawable {
 			break;
 		case GONDOLA:
 			currentSprite = Sprite.playerAir.get(2);
+			break;
+		case GAMEOVER:
+			currentSprite = Sprite.playerGliding;
 			break;
 		}
 

@@ -23,6 +23,7 @@ public class Sprite {
 	public static BufferedImage playerDown;
 	public static BufferedImage playerSitting;
 	public static BufferedImage playerAirDown;
+	public static BufferedImage playerGliding;
 
 	public static BufferedImage rock;
 	public static BufferedImage tree;
@@ -49,6 +50,7 @@ public class Sprite {
 	public static BufferedImage signStartRight;
 	public static BufferedImage signFinishLeft;
 	public static BufferedImage signFinishRight;
+	public static BufferedImage signCliff;
 
 	public static BufferedImage line;
 
@@ -63,6 +65,10 @@ public class Sprite {
 	public static BufferedImage snowboarderFlipLeft;
 	public static BufferedImage snowboarderFlipCenter;
 	public static BufferedImage snowboarderFlipRight;
+	public static BufferedImage snowboarderCliff;
+
+	public static BufferedImage cliffEdge;
+	public static BufferedImage cliff;
 
 	public static void bufferImages() {
 
@@ -84,6 +90,7 @@ public class Sprite {
 			playerSitting = ImageIO.read(new File(path + "sitting.png"));
 			playerDown = ImageIO.read(new File(path + "down.png"));
 			playerAirDown = ImageIO.read(new File(path + "airDown.png"));
+			playerGliding = ImageIO.read(new File(path + "gliding.png"));
 
 			rock = ImageIO.read(new File(path + "rock.png"));
 			tree = ImageIO.read(new File(path + "tree.png"));
@@ -106,6 +113,7 @@ public class Sprite {
 			signStartRight = ImageIO.read(new File(path + "signSlalomStartRight.png"));
 			signFinishLeft = ImageIO.read(new File(path + "signSlalomFinishLeft.png"));
 			signFinishRight = ImageIO.read(new File(path + "signSlalomFinishRight.png"));
+			signCliff = ImageIO.read(new File(path + "signCliff.png"));
 
 			line = ImageIO.read(new File(path + "line.png"));
 
@@ -124,6 +132,10 @@ public class Sprite {
 			snowboarderFlipLeft = ImageIO.read(new File(path + "snowboarderFlipLeft.png"));
 			snowboarderFlipCenter = ImageIO.read(new File(path + "snowboarderFlipCenter.png"));
 			snowboarderFlipRight = ImageIO.read(new File(path + "snowboarderFlipRight.png"));
+			snowboarderCliff = ImageIO.read(new File(path + "snowboarderCliff.png"));
+
+			cliffEdge = ImageIO.read(new File(path + "cliffEdge.png"));
+			cliff = ImageIO.read(new File(path + "cliff.png"));
 
 			System.out.println("images loaded");
 		} catch (IOException e) {
