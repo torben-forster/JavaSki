@@ -6,7 +6,7 @@ import java.util.List;
 
 import java.awt.image.BufferedImage;
 
-import spielereien.ski.obstacle.Cliff;
+import spielereien.ski.obstacle.CliffLowerEdge;
 import spielereien.ski.obstacle.Collideable;
 import spielereien.ski.obstacle.DeepSnow;
 import spielereien.ski.obstacle.FinishLine;
@@ -37,7 +37,7 @@ public class Player extends Drawable {
 	final static int SLOW = 3;
 	final static int GONDOLA = 4;
 	final static int WAITING = 5;
-	final static int GAMEOVER = 6;
+	public final static int GAMEOVER = 6;
 
 	final static int FRONTFLIP = 10;
 	final static int BACKFLIP = -10;
@@ -355,7 +355,7 @@ public class Player extends Drawable {
 		} else if (coll instanceof FinishLine) {
 			inSlalom = false;
 
-		} else if (coll instanceof Cliff) {
+		} else if (coll instanceof CliffLowerEdge) {
 			state = GAMEOVER;
 			currentScoreTimer = 0;
 			new EndPanel();

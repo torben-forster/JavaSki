@@ -41,10 +41,9 @@ public class Snowboarder extends Collideable {
 	}
 
 	public void step() {
+		wrap();
 
 		if (state == BOARDING) {
-
-			wrap();
 
 			if (Math.random() * 40 + 20 < sinceLastTurn) {
 				turn();
@@ -67,15 +66,17 @@ public class Snowboarder extends Collideable {
 			myShadow.x = x;
 			myShadow.y = y;
 		} else {
+			speedZ = 0;
+			z = 0;
 			y += 10;
-			speedZ += Player.GRAVITY;
-			z += speedZ;
 		}
 	}
 
 	private void wrap() {
+		if(SkiPanel.player.state == SkiPanel.player.GAMEOVER) {
+			return;
+		}
 		if (!onScreen(getDrawX(), getDrawY(), Math.max((int) dimension.getHeight(), (int) dimension.getWidth()))) {
-			// state = BOARDING;
 
 			double randomX = Math.random() * dimension.getWidth() * 0.5 - dimension.getWidth() * 0.25;
 			double randomY = Math.random() * dimension.getHeight() * 0.25 - dimension.getWidth() * 0.75;
@@ -105,6 +106,8 @@ public class Snowboarder extends Collideable {
 			return;
 		}
 
+		boolean onCliff = false;
+
 		for (Collideable c : collideables) {
 			if (c.equals(this)) {
 				continue;
@@ -114,16 +117,23 @@ public class Snowboarder extends Collideable {
 			double dY = Math.abs(y - c.y);
 
 			if (dX < 5 + c.getMaskX((int) z) && dY < 5 + c.maskY) {
-				if (c instanceof Cliff) {
-					state = CLIFF;
-					continue;
+				if (c instanceof CliffLowerEdge || c instanceof CliffUpperEdge) {
+					onCliff = true;
+
 				}
 
 				flip();
 				if (c.ramp) {
 					speedZ += c.jumpMult;
 				}
+
 			}
+		}
+
+		if (onCliff) {
+			state = CLIFF;
+		} else {
+			state = BOARDING;
 		}
 	}
 

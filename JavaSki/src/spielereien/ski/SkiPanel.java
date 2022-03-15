@@ -21,7 +21,8 @@ import javax.swing.Timer;
 
 import spielereien.ski.obstacle.Collideable;
 import spielereien.ski.obstacle.Bush;
-import spielereien.ski.obstacle.Cliff;
+import spielereien.ski.obstacle.CliffLowerEdge;
+import spielereien.ski.obstacle.CliffUpperEdge;
 import spielereien.ski.obstacle.DeepSnow;
 import spielereien.ski.obstacle.FinishLine;
 import spielereien.ski.obstacle.Gondola;
@@ -110,9 +111,11 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		spawnObstacles();
 
 		spawnLift();
+		
 		spawnSlalomCourse();
 
-		spawnCliff();
+		spawnUpperCliff();
+		spawnLowerCliff();
 
 		Collections.sort(drawables);
 
@@ -386,11 +389,27 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		return Math.sin(x * x * SEED);
 	}
 
-	private void spawnCliff() {
+	private void spawnUpperCliff() {
+		int y = -1100;
+
+		for (int x = 0; x < 10000; x += 64) {
+			new CliffUpperEdge(x, y, true);
+
+		}
+
+		for (int i = 0; i < 24; i++) {
+			y -= 64;
+			for (int x = 0; x < 10000; x += 64) {
+				new CliffUpperEdge(x, y);
+			}
+		}
+	}
+
+	private void spawnLowerCliff() {
 		int y = 16100;
 
 		for (int x = 0; x < 10000; x += 64) {
-			new Cliff(x, y, true);
+			new CliffLowerEdge(x, y, true);
 
 		}
 		for (int x = 0; x < 10000; x += 500) {
@@ -400,7 +419,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		for (int i = 0; i < 24; i++) {
 			y += 64;
 			for (int x = 0; x < 10000; x += 64) {
-				new Cliff(x, y);
+				new CliffLowerEdge(x, y);
 			}
 		}
 	}

@@ -67,8 +67,10 @@ public class Sprite {
 	public static BufferedImage snowboarderFlipRight;
 	public static BufferedImage snowboarderCliff;
 
-	public static BufferedImage cliffEdge;
+	public static BufferedImage lowerCliffEdge;
+	public static BufferedImage upperCliffEdge;
 	public static BufferedImage cliff;
+	public static Map<Integer, BufferedImage> cliffs = new HashMap<Integer, BufferedImage>();
 
 	public static void bufferImages() {
 
@@ -134,8 +136,12 @@ public class Sprite {
 			snowboarderFlipRight = ImageIO.read(new File(path + "snowboarderFlipRight.png"));
 			snowboarderCliff = ImageIO.read(new File(path + "snowboarderCliff.png"));
 
-			cliffEdge = ImageIO.read(new File(path + "cliffEdge.png"));
-			cliff = ImageIO.read(new File(path + "cliff.png"));
+			lowerCliffEdge = ImageIO.read(new File(path + "lowerCliffEdge.png"));
+			upperCliffEdge = ImageIO.read(new File(path + "upperCliffEdge.png"));
+			cliff = ImageIO.read(new File(path + "cliff2.png"));
+			for (int i = 0; i <= 3; i++) {
+				cliffs.put(i, ImageIO.read(new File(path + "cliff" + i + ".png")));
+			}
 
 			System.out.println("images loaded");
 		} catch (IOException e) {
