@@ -22,7 +22,7 @@ public class CliffUpperEdge extends Solid {
 	}
 
 	private static BufferedImage randomCliffSprite() {
-		double rnd = Math.random() * 10;
+		//double rnd = Math.random() * 10;
 
 		return Sprite.cliff;// return Sprite.cliffs.get((int) (rnd % Sprite.cliffs.size()));
 

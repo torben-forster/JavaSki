@@ -413,7 +413,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		}
 		for (int x = 0; x < 10000; x += 500) {
-			Sign.newSignCliff(x, y - 64);
+			Sign.newSignCliff(x, y - 80);
 		}
 
 		for (int i = 0; i < 24; i++) {

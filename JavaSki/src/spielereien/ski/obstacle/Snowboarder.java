@@ -73,9 +73,10 @@ public class Snowboarder extends Collideable {
 	}
 
 	private void wrap() {
-		if(SkiPanel.player.state == SkiPanel.player.GAMEOVER) {
+		if (SkiPanel.player.state == Player.GAMEOVER) {
 			return;
 		}
+
 		if (!onScreen(getDrawX(), getDrawY(), Math.max((int) dimension.getHeight(), (int) dimension.getWidth()))) {
 
 			double randomX = Math.random() * dimension.getWidth() * 0.5 - dimension.getWidth() * 0.25;
@@ -119,7 +120,8 @@ public class Snowboarder extends Collideable {
 			if (dX < 5 + c.getMaskX((int) z) && dY < 5 + c.maskY) {
 				if (c instanceof CliffLowerEdge || c instanceof CliffUpperEdge) {
 					onCliff = true;
-
+				} else if (c instanceof Solid) {
+					z += c.maskZ * 0.5;
 				}
 
 				flip();
@@ -131,7 +133,7 @@ public class Snowboarder extends Collideable {
 		}
 
 		if (onCliff) {
-			state = CLIFF;
+			// state = CLIFF;
 		} else {
 			state = BOARDING;
 		}
@@ -145,7 +147,7 @@ public class Snowboarder extends Collideable {
 
 	private void jump() {
 		speedZ = 4;
-		z = 0.1;
+		z += 0.1;
 	}
 
 	@Override
