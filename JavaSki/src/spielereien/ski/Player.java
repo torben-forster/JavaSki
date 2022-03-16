@@ -39,6 +39,9 @@ public class Player extends Drawable {
 	final static int WAITING = 5;
 	public final static int GAMEOVER = 6;
 
+	final static int LEFT = -1;
+	final static int RIGHT = 1;
+
 	final static int FRONTFLIP = 10;
 	final static int BACKFLIP = -10;
 
@@ -55,12 +58,15 @@ public class Player extends Drawable {
 	int knockoutTimer;
 	int currentScoreTimer;
 	int skipTimer;
+	int pushingTimer;
 
 	boolean heldG;
 
 	int heading; // 0 is down, negative is left, positive is right
 	int airHeading;
 	double speed;
+
+	int pushing;
 
 	GondolaUp myGondola;
 	Shadow myShadow;
@@ -80,6 +86,8 @@ public class Player extends Drawable {
 		this.speedY = 0;
 		this.speedZ = 0;
 
+		this.pushing = 0;
+
 		this.turbo = 1;
 
 		this.heading = 0;
@@ -90,6 +98,7 @@ public class Player extends Drawable {
 		this.knockoutTimer = -1;
 		this.currentScoreTimer = -1;
 		this.skipTimer = 0;
+		this.pushingTimer = -1;
 
 		this.heldG = false;
 
@@ -240,14 +249,18 @@ public class Player extends Drawable {
 	}
 
 	private void handleTimers() {
-		climbingTimer--;
+
 		graceTimer--;
+
+		if (climbingTimer >= 0) {
+			climbingTimer--;
+		}
 
 		if (knockoutTimer > 0 && onGround()) {
 			knockoutTimer--;
 		}
 
-		if (knockoutTimer == 0 && state == SKIING) {
+		if (knockoutTimer == 0 && (state == SKIING || state == WAITING)) {
 			// just stood up
 			knockoutTimer = -1;
 		}
@@ -267,6 +280,17 @@ public class Player extends Drawable {
 			skipTimer = 0;
 		}
 		heldG = false;
+
+		if (pushingTimer > 0) {
+			pushingTimer--;
+		}
+		if (Math.abs(heading) != 4) {
+			pushingTimer = 0;
+		}
+		if (pushingTimer == 0) {
+			pushing = 0;
+			pushingTimer = -1;
+		}
 
 		if (inSlalom) {
 			slalomTimer += 0.03;
@@ -422,18 +446,19 @@ public class Player extends Drawable {
 
 				if ((heading == -4 || heading == 4) && speed <= 2) {
 					speed = 0;
-					climbingTimer = 6;
+					climbingTimer = 4;
 				}
 
 				turnUpwards();
 			} else if (state == SITTING) {
 				state = SKIING;
+				climbingTimer = 3;
 				if (heading >= 0) {
 					heading = 4;
-					climbingTimer = 6;
+
 				} else {
 					heading = -4;
-					climbingTimer = 6;
+
 				}
 			}
 		} else {
@@ -502,6 +527,10 @@ public class Player extends Drawable {
 
 				if (heading == -4) {
 					speed += 0.75 * turbo;
+					if (pushingTimer <= 0) {
+						pushing = LEFT;
+						pushingTimer = 10;
+					}
 				} else if (heading > -4) {
 					heading--;
 				}
@@ -532,6 +561,10 @@ public class Player extends Drawable {
 
 				if (heading == 4) {
 					speed += 0.75 * turbo;
+					if (pushingTimer <= 0) {
+						pushing = RIGHT;
+						pushingTimer = 10;
+					}
 				} else if (heading < 4) {
 					heading++;
 				}
@@ -572,6 +605,7 @@ public class Player extends Drawable {
 		if (inputBlocked() && state != WAITING) {
 			return;
 		}
+		System.out.println("input g detected");
 
 		if (state == WAITING) {
 			state = SITTING;
@@ -631,6 +665,8 @@ public class Player extends Drawable {
 
 	private void land() {
 		z = 0;
+
+		speed += Math.sqrt(Math.abs(speedZ));
 		speedZ = 0;
 
 		if (airHeading <= 1 && airHeading >= -1) {
@@ -643,7 +679,7 @@ public class Player extends Drawable {
 			accident();
 		}
 
-		currentScoreTimer = 20;
+		currentScoreTimer = 30;
 
 	}
 
@@ -785,7 +821,26 @@ public class Player extends Drawable {
 			}
 		case SKIING:
 			if (onGround()) {
-				currentSprite = Sprite.playerSkiing.get(heading);
+				switch (pushing) {
+				case 0:
+					if (climbingTimer >= 2) {
+						if (heading == 4) {
+							currentSprite = Sprite.playerClimbingR;
+						} else {
+							currentSprite = Sprite.playerClimbingL;
+						}
+					} else {
+						currentSprite = Sprite.playerSkiing.get(heading);
+					}
+					break;
+				case LEFT:
+					currentSprite = Sprite.playerPushingL;
+					break;
+				case RIGHT:
+					currentSprite = Sprite.playerPushingR;
+					break;
+				}
+
 			} else {
 				currentSprite = Sprite.playerAir.get(airHeading);
 			}

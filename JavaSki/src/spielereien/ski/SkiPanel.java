@@ -111,7 +111,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		spawnObstacles();
 
 		spawnLift();
-		
+
 		spawnSlalomCourse();
 
 		spawnUpperCliff();
@@ -348,7 +348,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 	private void spawnSlalomCourse() {
 		// player starts at x = 5000, y = -600
-		System.out.println("generating slalom");
+		System.out.println("generating slalom with SEED: " + SEED);
 
 		int x = 4300;
 		int y = 250;

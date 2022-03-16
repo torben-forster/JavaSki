@@ -8,13 +8,15 @@ public class EndPanel extends Drawable {
 	@Override
 	public void drawMe(Graphics g) {
 
-		int rectWidth = (int) (dimension.getWidth() / 4);
-		int rectHeight = (int) (dimension.getHeight() / 4);
+		int rectWidth = (int) (dimension.getWidth() / 8);
+		int rectHeight = (int) (dimension.getHeight() / 8);
 
 		g.setColor(Color.WHITE);
-		g.fillRect((int) (rectWidth * 1.5), (int) (rectHeight * 1.5), rectWidth, rectHeight);
+		g.fillRect((int) (dimension.getWidth() - rectWidth) / 2, (int) (dimension.getHeight() - rectHeight) / 2,
+				rectWidth, rectHeight);
 		g.setColor(Color.BLACK);
-		g.drawRect((int) (rectWidth * 1.5), (int) (rectHeight * 1.5), rectWidth, rectHeight);
+		g.drawRect((int) (dimension.getWidth() - rectWidth) / 2, (int) (dimension.getHeight() - rectHeight) / 2,
+				rectWidth, rectHeight);
 
 		g.drawString("Thanks for playing!", (int) (dimension.getWidth() / 2 - 3 * 20),
 				(int) (dimension.getHeight() / 2));

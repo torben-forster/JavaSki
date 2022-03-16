@@ -6,16 +6,16 @@ import spielereien.ski.sprites.Sprite;
 
 public class CliffUpperEdge extends Solid {
 
-	boolean top;
+	boolean bot;
 
-	public CliffUpperEdge(int x, int y, boolean top) {
-		super(x, y, top ? Sprite.upperCliffEdge : randomCliffSprite());
+	public CliffUpperEdge(int x, int y, boolean bot) {
+		super(x, y, bot ? Sprite.upperCliffEdge : randomCliffSprite());
 
 		this.maskX = sprite.getWidth() / 2;
 		this.maskY = sprite.getHeight() / 2;
 		this.maskZ = 1000;
 
-		this.top = top;
+		this.bot = bot;
 
 		this.spriteOriginY = sprite.getHeight() / 2;
 

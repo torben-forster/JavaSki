@@ -24,6 +24,10 @@ public class Sprite {
 	public static BufferedImage playerSitting;
 	public static BufferedImage playerAirDown;
 	public static BufferedImage playerGliding;
+	public static BufferedImage playerPushingL;
+	public static BufferedImage playerPushingR;
+	public static BufferedImage playerClimbingL;
+	public static BufferedImage playerClimbingR;
 
 	public static BufferedImage rock;
 	public static BufferedImage tree;
@@ -88,6 +92,10 @@ public class Sprite {
 			playerAir.put(2, ImageIO.read(new File(path + "airBack.png")));
 			playerAir.put(10, ImageIO.read(new File(path + "airFrontflip.png")));
 			playerAir.put(-10, ImageIO.read(new File(path + "airBackflip.png")));
+			playerPushingL = ImageIO.read(new File(path + "skiingPushingL.png"));
+			playerPushingR = ImageIO.read(new File(path + "skiingPushingR.png"));
+			playerClimbingL = ImageIO.read(new File(path + "climbingL.png"));
+			playerClimbingR = ImageIO.read(new File(path + "climbingR.png"));
 
 			playerSitting = ImageIO.read(new File(path + "sitting.png"));
 			playerDown = ImageIO.read(new File(path + "down.png"));
