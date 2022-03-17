@@ -10,4 +10,8 @@ public class StartLine extends Collideable {
 		this.maskZ = 100;
 	}
 
+	@Override
+	public double getDrawHeight() {
+		return y - 10;
+	}
 }

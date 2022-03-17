@@ -50,10 +50,12 @@ public class Collideable extends Drawable {
 		SkiPanel.collideables.add(this);
 	}
 
+	@Override
 	public int getDrawX() {
 		return (int) (x - SkiPanel.player.x + dimension.getSize().getWidth() * 0.5 - spriteOriginX);
 	}
 
+	@Override
 	public int getDrawY() {
 		return (int) (y - SkiPanel.player.y + dimension.getSize().getHeight() * 0.35 - spriteOriginY);
 	}

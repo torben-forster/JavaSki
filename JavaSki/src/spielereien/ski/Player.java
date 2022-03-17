@@ -386,13 +386,10 @@ public class Player extends Drawable {
 				currentScoreTimer = 0;
 			}
 			new EndPanel();
+		} else if (coll instanceof PoleSlalom) {
 
 		} else {
 			accident();
-		}
-
-		if (inSlalom && coll instanceof PoleSlalom) {
-			((PoleSlalom) coll).fail();
 		}
 
 		if (coll instanceof Solid) {
@@ -420,6 +417,7 @@ public class Player extends Drawable {
 
 		state = DOWN;
 		knockoutTimer = 40;
+
 	}
 
 	public void handleScores() {

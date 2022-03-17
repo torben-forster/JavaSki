@@ -9,5 +9,10 @@ public class FinishLine extends Collideable {
 
 		this.maskZ = 100;
 	}
+	
+	@Override
+	public double getDrawHeight() {
+		return y -10;
+	}
 
 }
