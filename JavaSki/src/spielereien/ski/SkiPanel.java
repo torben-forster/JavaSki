@@ -559,7 +559,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		}
 
 		g.setColor(Color.WHITE);
-		g.fillRect(ps.getDrawX() - 400 + PoleSlalom.SPACING / 2, ps.getDrawY() - 175, 800 + PoleSlalom.SPACING, 150);
+		g.fillRect(ps.getDrawX() - 400 + PoleSlalom.SPACING / 2, ps.getDrawY() + height - 200, 800 + PoleSlalom.SPACING,
+				150);
 	}
 
 	private void drawMarkers(Graphics g, PoleSlalom lastPsR, int width, int height, PoleSlalom ps) {
@@ -576,7 +577,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		}
 
 		g.setColor(Color.WHITE);
-		g.fillRect(ps.getDrawX() - 400 + PoleSlalom.SPACING / 2, ps.getDrawY() - 175, 800 + PoleSlalom.SPACING, 150);
+		g.fillRect(ps.getDrawX() - 400 + PoleSlalom.SPACING / 2, ps.getDrawY() + height - 200, 800 + PoleSlalom.SPACING,
+				150);
 	}
 
 	private void drawLastMarkers(Graphics g, PoleSlalom lastPsR, int width, int height) {

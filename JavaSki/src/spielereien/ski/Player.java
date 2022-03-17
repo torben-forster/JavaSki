@@ -382,7 +382,9 @@ public class Player extends Drawable {
 
 		} else if (coll instanceof CliffLowerEdge) {
 			state = GAMEOVER;
-			currentScoreTimer = 0;
+			if (currentScoreTimer > 0) {
+				currentScoreTimer = 0;
+			}
 			new EndPanel();
 
 		} else {

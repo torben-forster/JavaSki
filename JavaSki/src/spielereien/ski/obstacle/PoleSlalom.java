@@ -16,7 +16,7 @@ public abstract class PoleSlalom extends Collideable {
 	public boolean alreadyPassed;
 	public char facing;
 
-	public static final int SPACING = 112;
+	public static final int SPACING = 120;
 
 	PoleSlalom partner;
 
