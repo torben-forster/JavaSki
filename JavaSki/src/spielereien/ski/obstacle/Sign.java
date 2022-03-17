@@ -16,23 +16,23 @@ public class Sign extends Collideable {
 		new Sign(x, y, Sprite.signSlalom);
 	}
 
-	public static void newSignStartLeft(int x, int y) {
-		new Sign(x, y, Sprite.signStartLeft);
+	public static Sign newSignStartLeft(int x, int y) {
+		return new Sign(x, y, Sprite.signStartLeft);
 	}
 
-	public static void newSignStartRight(int x, int y) {
-		new Sign(x, y, Sprite.signStartRight);
+	public static Sign newSignStartRight(int x, int y) {
+		return new Sign(x, y, Sprite.signStartRight);
 	}
 
-	public static void newSignFinishLeft(int x, int y) {
-		new Sign(x, y, Sprite.signFinishLeft);
+	public static Sign newSignFinishLeft(int x, int y) {
+		return new Sign(x, y, Sprite.signFinishLeft);
 	}
 
-	public static void newSignFinishRight(int x, int y) {
-		new Sign(x, y, Sprite.signFinishRight);
+	public static Sign newSignFinishRight(int x, int y) {
+		return new Sign(x, y, Sprite.signFinishRight);
 	}
-	
+
 	public static void newSignCliff(int x, int y) {
-		new Sign(x,y,Sprite.signCliff);
+		new Sign(x, y, Sprite.signCliff);
 	}
 }

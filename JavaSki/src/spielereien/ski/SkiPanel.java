@@ -38,6 +38,7 @@ import spielereien.ski.obstacle.PoleSlalomRed;
 import spielereien.ski.obstacle.PoleSlalomBlue;
 import spielereien.ski.obstacle.SmallHill;
 import spielereien.ski.obstacle.Snowboarder;
+import spielereien.ski.obstacle.Solid;
 import spielereien.ski.obstacle.StartLine;
 import spielereien.ski.obstacle.StationLower;
 import spielereien.ski.obstacle.StationMiddle;
@@ -64,6 +65,11 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	final int windowHeight = 1000;
 
 	public final static int LASTMAST = 16;
+
+	Sign slalomStartLeft;
+	Sign slalomStartRight;
+	Sign slalomFinishLeft;
+	Sign slalomFinishRight;
 
 	static Dimension windowDimension;
 
@@ -312,6 +318,9 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	private void clearArea(int x, int y, int x2, int y2) {
 		ArrayList<Collideable> collideablesToRemove = new ArrayList<Collideable>();
 		for (Collideable c : collideables) {
+			if (c instanceof Gondola || c instanceof LiftMast || c instanceof Solid) {
+				continue;
+			}
 			if (c.x >= x && c.x <= x2 && c.y >= y && c.y <= y2) {
 				collideablesToRemove.add(c);
 			}
@@ -339,8 +348,11 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 			new GondolaDown(xGondolaDown, y + 500);
 			new GondolaDown(xGondolaDown, y);
 		}
+		clearArea(x - 100, -700, x + 200, -500);
 		new StationUpper(x, -600);
+		clearArea(x - 100, 8400, x + 200, 8600);
 		new StationMiddle(x, 8500);
+		clearArea(x - 100, 15380, x + 200, 15580);
 		new StationLower(x, 15480);
 
 		System.out.println("lift generated");
@@ -353,14 +365,14 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		int x = 4300;
 		int y = 250;
 
-		int randomizerX = 100;
+		int randomizerX = 100; // random offset in either direction
 
 		clearArea(x - 200, y - 500, x + 200, y - 200);
 
 		Sign.newSignSlalom(x, y - 450);
 
-		Sign.newSignStartLeft(x + 75, y - 250);
-		Sign.newSignStartRight(x - 75, y - 250);
+		slalomStartLeft = Sign.newSignStartLeft(x + 75, y - 250);
+		slalomStartRight = Sign.newSignStartRight(x - 75, y - 250);
 		new StartLine(x, y - 249);
 
 		for (; y < 8000; y += 250) {
@@ -378,8 +390,8 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		clearArea(x - 200, y - 200, x + 200, y - 200);
 
-		Sign.newSignFinishLeft(x + 75, y);
-		Sign.newSignFinishRight(x - 75, y);
+		slalomFinishLeft = Sign.newSignFinishLeft(x + 75, y);
+		slalomFinishRight = Sign.newSignFinishRight(x - 75, y);
 		new FinishLine(x, y + 1);
 
 		System.out.println("slalom generated");
@@ -497,11 +509,94 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		drawtime = System.currentTimeMillis();
 
+		drawSlalomMarkers(g);
+
 		for (Drawable d : drawables) {
 			d.drawMe(g);
 		}
 
 		// drawDebug(g);
+	}
+
+	private void drawSlalomMarkers(Graphics g) {
+
+		PoleSlalom lastPsR = null;
+
+		int width = Sprite.slalomBlueLeft.getWidth();
+		int height = Sprite.slalomBlueLeft.getHeight();
+
+		for (PoleSlalom ps : PoleSlalom.allSlalomSigns) {
+
+			if (ps.facing == 'r') {
+				if (lastPsR == null) {
+					drawFirstMarkers(g, width, height, ps);
+
+					lastPsR = ps;
+					continue;
+				}
+
+				drawMarkers(g, lastPsR, width, height, ps);
+
+				lastPsR = ps;
+			}
+
+		}
+
+		drawLastMarkers(g, lastPsR, width, height);
+	}
+
+	private void drawFirstMarkers(Graphics g, int width, int height, PoleSlalom ps) {
+		// markers form first pole to start
+		g.setColor(Sprite.MARKING);
+
+		for (int i = -2; i < 2; i++) {
+			g.drawLine(ps.getDrawX() + width + i, ps.getDrawY() + height,
+					slalomStartRight.getDrawX() + Sprite.signStartRight.getWidth() + i - 4,
+					slalomStartRight.getDrawY() + Sprite.signStartRight.getHeight() + 4);
+			g.drawLine(ps.getDrawX() + i + PoleSlalom.SPACING, ps.getDrawY() + height,
+					slalomStartRight.getDrawX() + i + 150 + 4,
+					slalomStartRight.getDrawY() + Sprite.signStartRight.getHeight() + 4);
+		}
+
+		g.setColor(Color.WHITE);
+		g.fillRect(ps.getDrawX() - 400 + PoleSlalom.SPACING / 2, ps.getDrawY() - 175, 800 + PoleSlalom.SPACING, 150);
+	}
+
+	private void drawMarkers(Graphics g, PoleSlalom lastPsR, int width, int height, PoleSlalom ps) {
+		// markers in between
+		g.setColor(Sprite.MARKING);
+
+		for (int i = -2; i < 2; i++) {
+
+			g.drawLine(ps.getDrawX() + width + i, ps.getDrawY() + height, lastPsR.getDrawX() + width + i,
+					lastPsR.getDrawY() + height);
+			g.drawLine(ps.getDrawX() + i + PoleSlalom.SPACING, ps.getDrawY() + height,
+					lastPsR.getDrawX() + +i + PoleSlalom.SPACING, lastPsR.getDrawY() + height);
+
+		}
+
+		g.setColor(Color.WHITE);
+		g.fillRect(ps.getDrawX() - 400 + PoleSlalom.SPACING / 2, ps.getDrawY() - 175, 800 + PoleSlalom.SPACING, 150);
+	}
+
+	private void drawLastMarkers(Graphics g, PoleSlalom lastPsR, int width, int height) {
+		// markers form last pole to finish
+		g.setColor(Sprite.MARKING);
+		for (int i = -2; i < 2; i++) {
+
+			g.drawLine(lastPsR.getDrawX() + width + i, lastPsR.getDrawY() + height,
+					slalomFinishRight.getDrawX() + Sprite.signFinishRight.getWidth() + i - 4,
+					slalomFinishRight.getDrawY() + Sprite.signFinishRight.getHeight() - 1);
+
+			g.drawLine(lastPsR.getDrawX() + i + PoleSlalom.SPACING, lastPsR.getDrawY() + height,
+					slalomFinishRight.getDrawX() + i + 150 + 4,
+					slalomFinishRight.getDrawY() + Sprite.signFinishRight.getHeight() - 1);
+
+		}
+
+		g.setColor(Color.WHITE);
+		g.fillRect(lastPsR.getDrawX() - 400 + PoleSlalom.SPACING / 2, lastPsR.getDrawY() + height + 50,
+				800 + PoleSlalom.SPACING, 150);
 	}
 
 	public void drawDebug(Graphics g) {

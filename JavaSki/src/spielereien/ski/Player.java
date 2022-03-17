@@ -369,6 +369,7 @@ public class Player extends Drawable {
 			}
 			if (speedZ < 0) {
 				accident();
+				System.out.println("speedZ < 0");
 			}
 		} else if (coll instanceof StartLine) {
 			inSlalom = true;
@@ -446,7 +447,9 @@ public class Player extends Drawable {
 
 				if ((heading == -4 || heading == 4) && speed <= 2) {
 					speed = 0;
-					climbingTimer = 4;
+					if (climbingTimer <= 1) {
+						climbingTimer = 10;
+					}
 				}
 
 				turnUpwards();
@@ -605,7 +608,6 @@ public class Player extends Drawable {
 		if (inputBlocked() && state != WAITING) {
 			return;
 		}
-		System.out.println("input g detected");
 
 		if (state == WAITING) {
 			state = SITTING;
@@ -704,7 +706,7 @@ public class Player extends Drawable {
 		x = StationUpper.exitX;
 		y = StationUpper.exitY;
 		z = 0;
-		speed = 0;
+		stop();
 	}
 
 	private GondolaUp findClosestGondolaUp() {
@@ -823,7 +825,7 @@ public class Player extends Drawable {
 			if (onGround()) {
 				switch (pushing) {
 				case 0:
-					if (climbingTimer >= 2) {
+					if (climbingTimer >= 6) {
 						if (heading == 4) {
 							currentSprite = Sprite.playerClimbingR;
 						} else {

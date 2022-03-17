@@ -1,6 +1,7 @@
 package spielereien.ski.obstacle;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -25,6 +26,7 @@ public abstract class PoleSlalom extends Collideable {
 		alreadyPassed = false;
 		allSlalomSigns.add(this);
 		maskY = 1;
+		maskX = 9; // sprite is 13
 	}
 
 	public static void resetAll() {
@@ -68,5 +70,6 @@ public abstract class PoleSlalom extends Collideable {
 		partner.alreadyPassed = true;
 		partner.sprite = Sprite.slalomSuccess;
 	}
+
 
 }

@@ -15,6 +15,7 @@ public class Sprite {
 	public final static Color DARK_GREEN = new Color(50, 100, 50);
 	public final static Color BROWN = new Color(185, 122, 87);
 	public final static Color SHADOW = new Color(0, 0, 0, 50);
+	public final static Color MARKING = new Color(170, 227, 227);
 
 	public static BufferedImage noSprite;
 
