@@ -19,32 +19,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
-import spielereien.ski.obstacle.Collideable;
-import spielereien.ski.obstacle.Bush;
-import spielereien.ski.obstacle.CliffLowerEdge;
-import spielereien.ski.obstacle.CliffUpperEdge;
-import spielereien.ski.obstacle.DeepSnow;
-import spielereien.ski.obstacle.FinishLine;
-import spielereien.ski.obstacle.Gondola;
-import spielereien.ski.obstacle.GondolaDown;
-import spielereien.ski.obstacle.GondolaUp;
-import spielereien.ski.obstacle.LargeHill;
-import spielereien.ski.obstacle.LiftMast;
-import spielereien.ski.obstacle.Ramp;
-import spielereien.ski.obstacle.Rock;
-import spielereien.ski.obstacle.Sign;
-import spielereien.ski.obstacle.PoleSlalom;
-import spielereien.ski.obstacle.PoleSlalomRed;
-import spielereien.ski.obstacle.PoleSlalomBlue;
-import spielereien.ski.obstacle.SmallHill;
-import spielereien.ski.obstacle.Snowboarder;
-import spielereien.ski.obstacle.Solid;
-import spielereien.ski.obstacle.StartLine;
-import spielereien.ski.obstacle.StationLower;
-import spielereien.ski.obstacle.StationMiddle;
-import spielereien.ski.obstacle.StationUpper;
-import spielereien.ski.obstacle.Stump;
-import spielereien.ski.obstacle.Tree;
+import spielereien.ski.obstacle.*;
 import spielereien.ski.sprites.Sprite;
 
 public class SkiPanel extends JLayeredPane implements ActionListener {
@@ -307,8 +282,9 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 	}
 
 	/**
-	 * clears a location, specified by the parameters ,of all obstacles in
-	 * {@link SkiPanel.collideables}
+	 * clears a rectangle, specified by the parameters, of all randomly generated
+	 * obstacles in {@link SkiPanel.collideables}; Station buildings, chair lifts
+	 * and lift masts are not removed
 	 * 
 	 * @param x  int, x-coordinate of upper-left corner
 	 * @param y  int, y-coordinate of upper-left corner
