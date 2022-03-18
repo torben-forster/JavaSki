@@ -192,7 +192,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 		if (keyPressed.equals("P")) {
 			paused = !paused;
 			getGraphics().drawString("PAUSED - PRESS 'P' TO CONTINUE", (int) (windowDimension.getWidth() / 2 - 30 * 5),
-					(int) (windowDimension.getHeight() / 2));
+					50);
 		}
 	}
 
