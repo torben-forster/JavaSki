@@ -416,7 +416,7 @@ public class SkiPanel extends JLayeredPane implements ActionListener {
 
 		System.out.println("generating obstacles");
 
-		new Snowboarder(0, 0);
+		new Snowboarder(4000, 0);
 
 		/*
 		 * creates obstacles in two rows at the same height, with player's wrap() that
