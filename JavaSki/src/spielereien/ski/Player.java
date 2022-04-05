@@ -340,7 +340,7 @@ public class Player extends Drawable {
 		for (Collideable c : collideables) {
 
 			double dX = Math.abs(x - c.x);
-			double dY = Math.abs(y - c.y);
+			double dY = Math.abs(y - c.y - 3);
 
 			if (dX < 5 + c.getMaskX((int) z) && dY < 5 + c.maskY && (z < 2 + c.maskZ)) {
 				if (c.enabled) {
