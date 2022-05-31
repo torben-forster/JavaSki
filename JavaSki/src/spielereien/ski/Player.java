@@ -809,7 +809,7 @@ public class Player extends Drawable {
 			if (state != WAITING) {
 				g.drawString("press 'G' to wait for the next chairlift", drawX + 20, drawY - 10);
 			} else {
-				g.drawString("press 'G' to stop waiting for the chairlift", drawX + 20, drawY - 10);
+				g.drawString("press 'G' to stop waiting", drawX + 20, drawY - 10);
 			}
 		}
 	}
