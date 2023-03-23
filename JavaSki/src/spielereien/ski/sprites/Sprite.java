@@ -80,7 +80,7 @@ public class Sprite {
 	public static void bufferImages() {
 
 		try {
-			String path = "src/spielereien/ski/sprites/";
+			String path = "JavaSki/src/spielereien/ski/sprites/";
 
 			noSprite = ImageIO.read(new File(path + "noSprite.png"));
 
